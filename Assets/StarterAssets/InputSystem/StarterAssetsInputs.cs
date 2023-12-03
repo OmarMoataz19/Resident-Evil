@@ -22,6 +22,8 @@ namespace StarterAssets
 		public bool cursorInputForLook = true;
 
 #if ENABLE_INPUT_SYSTEM
+
+
 		public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
