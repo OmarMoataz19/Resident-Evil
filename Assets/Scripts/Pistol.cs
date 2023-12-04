@@ -46,8 +46,6 @@ public class Pistol : MonoBehaviour
         if(bulletsLeft > 0 && readyToShoot && !reloading) 
         {
             animator.SetTrigger("Shoot");
-
-            //gunAnimation.Play("Armature|Fire", PlayMode.StopAll);
             bulletsShot = bulletsPerTap;
             readyToShoot = false;
             Vector2 screenCenterPostition = new Vector2(Screen.width / 2f, Screen.height / 2f);
