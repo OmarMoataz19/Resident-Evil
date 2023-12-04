@@ -9,13 +9,12 @@ public class ThirdPersonShootingController : MonoBehaviour
     public LayerMask aimColliderLayerMask = new LayerMask();
     private StarterAssetsInputs starterAssetsInputs;
     private ThirdPersonController thirdPersonController;
-    private Animator animator;
-  
+    private Animator animator;  
     //variables for controlling ads
     public float normalSensitivity = 1f;
     public float aimSensitivity = 0.5f;
     // Start is called before the first frame update
-
+    public Pistol pistol;
     void Start()
     {
         starterAssetsInputs = GetComponent<StarterAssetsInputs>();
@@ -55,6 +54,7 @@ public class ThirdPersonShootingController : MonoBehaviour
 
             //change the layers weight taking the index..
             animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f)); //lerp to make it smooth..
+            animator.SetBool("Aim", true);
         }
         else{
             aimVirtualCamera.gameObject.SetActive(false);
@@ -65,6 +65,7 @@ public class ThirdPersonShootingController : MonoBehaviour
 
             //change the layers weight taking the index..
             animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f)); //lerp to make it smooth..
+            animator.SetBool("Aim", false);
         }
 
         if(starterAssetsInputs.shoot)
@@ -75,6 +76,7 @@ public class ThirdPersonShootingController : MonoBehaviour
             //shoot the gun
             Debug.Log("Shoot");
             //check if we hit something
+            pistol.Shoot();
             if(targetHit != null)
             {
                 //check if we hit a zombie
@@ -87,6 +89,7 @@ public class ThirdPersonShootingController : MonoBehaviour
                 // }
             }
             starterAssetsInputs.shoot = false;
+
         }
     }
 }
