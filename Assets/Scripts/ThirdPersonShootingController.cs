@@ -9,6 +9,7 @@ public class ThirdPersonShootingController : MonoBehaviour
     public LayerMask aimColliderLayerMask = new LayerMask();
     private StarterAssetsInputs starterAssetsInputs;
     private ThirdPersonController thirdPersonController;
+    private Transform transform;
     private Animator animator;  
     //variables for controlling ads
     public float normalSensitivity = 1f;
@@ -20,6 +21,7 @@ public class ThirdPersonShootingController : MonoBehaviour
         starterAssetsInputs = GetComponent<StarterAssetsInputs>();
         thirdPersonController = GetComponent<ThirdPersonController>();
         animator = GetComponent<Animator>();
+        transform =  GetComponent<Transform>();
     }
 
     // Update is called once per frame
@@ -30,11 +32,8 @@ public class ThirdPersonShootingController : MonoBehaviour
         //calculate where leon is pointing 
         Vector2 screenCenterPostition = new Vector2(Screen.width / 2f, Screen.height / 2f);
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPostition);
-
-        Transform targetHit = null; //will be used with hitscan..
         if(Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayerMask)){
             mouseWorldPosition = hit.point;
-            targetHit = hit.transform; //can check to decrease hp of the zombie etc.
         }
 
         if(starterAssetsInputs.aim)
@@ -48,13 +47,21 @@ public class ThirdPersonShootingController : MonoBehaviour
             //rotate leon to face where he is aiming
             Vector3 worldAimTarget = mouseWorldPosition;
             worldAimTarget.y = transform.position.y;
-            Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
-
+            Vector3 aimDirection = (worldAimTarget - transform.position ).normalized ;
             transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f ); //experimental value 20..
 
             //change the layers weight taking the index..
-            animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f)); //lerp to make it smooth..
-            animator.SetBool("Aim", true);
+            animator.SetLayerWeight(2, Mathf.Lerp(animator.GetLayerWeight(2), 1f, Time.deltaTime * 10f)); //lerp to make it smooth..
+            animator.SetTrigger("AimRifle");
+            if(starterAssetsInputs.shoot)
+            {
+                //todo: add the logic to check if holding gun etc && sufficient ammo..
+                // check for the logic of automatic and semi automatic here as well..
+                //shoot the gun
+                pistol.Shoot();
+                starterAssetsInputs.shoot = false;
+
+            }
         }
         else{
             aimVirtualCamera.gameObject.SetActive(false);
@@ -64,32 +71,8 @@ public class ThirdPersonShootingController : MonoBehaviour
             thirdPersonController.SetRotateOnMove(true);
 
             //change the layers weight taking the index..
-            animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f)); //lerp to make it smooth..
-            animator.SetBool("Aim", false);
-        }
-
-        if(starterAssetsInputs.shoot)
-        {
-            //todo: add the logic to check if holding gun etc && sufficient ammo..
-            // check for the logic of automatic and semi automatic here as well..
-
-            //shoot the gun
-            Debug.Log("Shoot");
-            //check if we hit something
-            pistol.Shoot();
-            if(targetHit != null)
-            {
-                //check if we hit a zombie
-                //ZombieController zombieController = targetHit.GetComponent<ZombieController>();
-                // if(zombieController != null)
-                // {
-                //     //we hit a zombie
-                //     //todo: add the logic to check which weapon is being used and decrease the hp accordingly..
-                //     zombieController.TakeDamage(10f);
-                // }
-            }
-            starterAssetsInputs.shoot = false;
-
+            animator.SetLayerWeight(2, Mathf.Lerp(animator.GetLayerWeight(2), 1f, Time.deltaTime * 10f)); //lerp to make it smooth..
+            animator.SetBool("AimRifle", false);
         }
     }
 }
