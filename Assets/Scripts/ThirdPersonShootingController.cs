@@ -60,8 +60,8 @@ public class ThirdPersonShootingController : MonoBehaviour
         {
             Vector3 mouseWorldPosition = GetMouseWorldPosition();
             RotateTowardsTarget(mouseWorldPosition);
-            animator.SetLayerWeight(2, Mathf.Lerp(animator.GetLayerWeight(2), 1f, Time.deltaTime * 10f));
-            animator.SetTrigger("AimRifle");
+            animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
+            animator.SetTrigger("Aim");
             crosshair.SetActive(true);
             starterAssetsInputs.sprint = false;
             rigBuilder.enabled = true;
@@ -95,8 +95,8 @@ public class ThirdPersonShootingController : MonoBehaviour
         }
         else
         {
-            animator.SetLayerWeight(2, Mathf.Lerp(animator.GetLayerWeight(2), 1f, Time.deltaTime * 10f));
-            animator.SetBool("AimRifle", false);
+            animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
+            animator.SetBool("Aim", false);
             crosshair.SetActive(false);
             rigBuilder.enabled = false;
  
