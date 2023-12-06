@@ -16,6 +16,8 @@ public class ThirdPersonShootingController : MonoBehaviour
     public float aimSensitivity = 0.5f;
     // Start is called before the first frame update
     public Pistol pistol;
+
+    public Transform debug;
     void Start()
     {
         starterAssetsInputs = GetComponent<StarterAssetsInputs>();
@@ -34,6 +36,7 @@ public class ThirdPersonShootingController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPostition);
         if(Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayerMask)){
             mouseWorldPosition = hit.point;
+            debug.position = mouseWorldPosition;
         }
 
         if(starterAssetsInputs.aim)
@@ -51,8 +54,8 @@ public class ThirdPersonShootingController : MonoBehaviour
             transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f ); //experimental value 20..
 
             //change the layers weight taking the index..
-            animator.SetLayerWeight(2, Mathf.Lerp(animator.GetLayerWeight(2), 1f, Time.deltaTime * 10f)); //lerp to make it smooth..
-            animator.SetTrigger("AimRifle");
+            animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f)); //lerp to make it smooth..
+            animator.SetTrigger("Aim");
             if(starterAssetsInputs.shoot)
             {
                 //todo: add the logic to check if holding gun etc && sufficient ammo..
@@ -71,8 +74,8 @@ public class ThirdPersonShootingController : MonoBehaviour
             thirdPersonController.SetRotateOnMove(true);
 
             //change the layers weight taking the index..
-            animator.SetLayerWeight(2, Mathf.Lerp(animator.GetLayerWeight(2), 1f, Time.deltaTime * 10f)); //lerp to make it smooth..
-            animator.SetBool("AimRifle", false);
+            animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f)); //lerp to make it smooth..
+            animator.SetBool("Aim", false);
         }
     }
 }
