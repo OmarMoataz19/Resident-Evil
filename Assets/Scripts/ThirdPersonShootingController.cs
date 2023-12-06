@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using StarterAssets;
+using UnityEngine.Animations.Rigging;
 public class ThirdPersonShootingController : MonoBehaviour
 {
     //to get the current weapon and switch between the layers & masks
@@ -15,9 +16,10 @@ public class ThirdPersonShootingController : MonoBehaviour
     public float normalSensitivity = 1f;
     public float aimSensitivity = 0.5f;
     public CinemachineVirtualCamera aimVirtualCamera;
+    public GameObject crosshair;
     public Transform debugTransform;
+    public RigBuilder rigBuilder;
     private Coroutine autoFireCoroutine; // Coroutine for automatic firing
-
 
     // private fields for the logic 
     private StarterAssetsInputs starterAssetsInputs;
@@ -55,6 +57,9 @@ public class ThirdPersonShootingController : MonoBehaviour
             RotateTowardsTarget(mouseWorldPosition);
             animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
             animator.SetTrigger("Aim");
+            crosshair.SetActive(true);
+            starterAssetsInputs.sprint = false;
+            rigBuilder.enabled = true;
 
             //rotate the weapon if it is a pistol or a revolver weapon
             if (mainController.GetCurrentWeapon().name == "revolver")
@@ -87,15 +92,31 @@ public class ThirdPersonShootingController : MonoBehaviour
         {
             animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
             animator.SetBool("Aim", false);
+            crosshair.SetActive(false);
+            rigBuilder.enabled = false;
+ 
         }
     }
 
     private Vector3 GetMouseWorldPosition()
     {
-        Vector2 screenCenterPosition = new Vector2((Screen.width  / 2f) + 240 , (Screen.height  / 2f) - 20);
+        float tempX = 0f;
+        float tempY = 0f;
+        if (mainController.GetCurrentWeapon().name == "pistol" || mainController.GetCurrentWeapon().name == "revolver" )
+        {
+            tempX = 240f;
+            tempY = -20f;
+        }
+        else
+        {
+            tempX = 400;
+            tempY = -20f;
+        }
+        Vector2 screenCenterPosition = new Vector2((Screen.width  / 2f) + tempX , (Screen.height  / 2f) + tempY);
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPosition);
         if (Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayerMask))
         {
+            debugTransform.position = hit.point;
             return hit.point;
         }
         return Vector3.zero;
