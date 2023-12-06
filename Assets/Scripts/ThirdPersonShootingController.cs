@@ -15,6 +15,7 @@ public class ThirdPersonShootingController : MonoBehaviour
     public float normalSensitivity = 1f;
     public float aimSensitivity = 0.5f;
     public CinemachineVirtualCamera aimVirtualCamera;
+    public Transform debugTransform;
     private Coroutine autoFireCoroutine; // Coroutine for automatic firing
 
 
@@ -54,6 +55,33 @@ public class ThirdPersonShootingController : MonoBehaviour
             RotateTowardsTarget(mouseWorldPosition);
             animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
             animator.SetTrigger("Aim");
+
+            //rotate the weapon if it is a pistol or a revolver weapon
+            if (mainController.GetCurrentWeapon().name == "revolver")
+            {
+                Transform weaponTransform = mainController.GetCurrentWeapon().transform;
+                
+                // Adjust these values in the editor to find the correct orientation
+                Quaternion targetRotation = Quaternion.Euler(-102.59f, 90, 180);
+                Vector3 targetPosition = new Vector3(0.027f, 0.05f, -0.03f);
+                
+                // Apply smooth transition
+                weaponTransform.localRotation = Quaternion.Lerp(weaponTransform.localRotation, targetRotation, Time.deltaTime * 10f);
+                weaponTransform.localPosition = Vector3.Lerp(weaponTransform.localPosition, targetPosition, Time.deltaTime * 10f);
+            }
+            if (mainController.GetCurrentWeapon().name == "pistol")
+            {
+                Transform weaponTransform = mainController.GetCurrentWeapon().transform;
+                
+                // Adjust these values in the editor to find the correct orientation
+                Quaternion targetRotation = Quaternion.Euler(-101.753f, 90, 180);
+                Vector3 targetPosition = new Vector3(-0.0003734734f, -0.07866945f, -0.03000128f);
+                
+                // Apply smooth transition
+                weaponTransform.localRotation = Quaternion.Lerp(weaponTransform.localRotation, targetRotation, Time.deltaTime * 10f);
+                weaponTransform.localPosition = Vector3.Lerp(weaponTransform.localPosition, targetPosition, Time.deltaTime * 10f);
+            }
+
         }
         else
         {
@@ -64,7 +92,7 @@ public class ThirdPersonShootingController : MonoBehaviour
 
     private Vector3 GetMouseWorldPosition()
     {
-        Vector2 screenCenterPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        Vector2 screenCenterPosition = new Vector2((Screen.width  / 2f) + 240 , (Screen.height  / 2f) - 20);
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPosition);
         if (Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayerMask))
         {
