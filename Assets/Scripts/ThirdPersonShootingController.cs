@@ -19,11 +19,11 @@ public class ThirdPersonShootingController : MonoBehaviour
     public GameObject crosshair;
     public Transform debugTransform;
     public RigBuilder rigBuilder;
-    private Coroutine autoFireCoroutine; // Coroutine for automatic firing
 
     // private fields for the logic 
     private StarterAssetsInputs starterAssetsInputs;
     private ThirdPersonController thirdPersonController;
+    private float autoFireTimer = 0f;  // Timer for automatic firing
     private Transform transform;
     private Animator animator;  
         
@@ -43,6 +43,11 @@ public class ThirdPersonShootingController : MonoBehaviour
         {
             HandleShooting();
         }
+       // Update the auto fire timer: check this
+        if (autoFireTimer > 0)
+        {
+            autoFireTimer -= Time.deltaTime;
+        }
     }
 
     private void HandleAiming(bool isAiming)
@@ -55,8 +60,8 @@ public class ThirdPersonShootingController : MonoBehaviour
         {
             Vector3 mouseWorldPosition = GetMouseWorldPosition();
             RotateTowardsTarget(mouseWorldPosition);
-            animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
-            animator.SetTrigger("Aim");
+            animator.SetLayerWeight(2, Mathf.Lerp(animator.GetLayerWeight(2), 1f, Time.deltaTime * 10f));
+            animator.SetTrigger("AimRifle");
             crosshair.SetActive(true);
             starterAssetsInputs.sprint = false;
             rigBuilder.enabled = true;
@@ -90,8 +95,8 @@ public class ThirdPersonShootingController : MonoBehaviour
         }
         else
         {
-            animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
-            animator.SetBool("Aim", false);
+            animator.SetLayerWeight(2, Mathf.Lerp(animator.GetLayerWeight(2), 1f, Time.deltaTime * 10f));
+            animator.SetBool("AimRifle", false);
             crosshair.SetActive(false);
             rigBuilder.enabled = false;
  
@@ -141,25 +146,16 @@ public class ThirdPersonShootingController : MonoBehaviour
                     currentWeapon.Shoot();
                     starterAssetsInputs.shoot = false;
                 }
-                else if (currentWeapon.GetFiringMode() == Weapon.FiringMode.Automatic && autoFireCoroutine == null)
+                else if (currentWeapon.GetFiringMode() == Weapon.FiringMode.Automatic)
                 {
-                    autoFireCoroutine = StartCoroutine(AutoFire(currentWeapon));
+                    //check if the user is holding left mouse click on the weapon
+                    if (autoFireTimer <= 0 && Input.GetMouseButton(0))
+                    {
+                        currentWeapon.Shoot();
+                        autoFireTimer = currentWeapon.GetTimeBetweenShooting();
+                    }
                 }
             }
-            else if (currentWeapon.GetFiringMode() == Weapon.FiringMode.Automatic && autoFireCoroutine != null)
-            {
-                StopCoroutine(autoFireCoroutine);
-                autoFireCoroutine = null;
-            }
-        }
-    }
-
-    private IEnumerator AutoFire(Weapon weapon)
-    {
-        while (true)
-        {
-            weapon.Shoot();
-            yield return new WaitForSeconds(weapon.GetTimeBetweenShooting());
         }
     }
 }
