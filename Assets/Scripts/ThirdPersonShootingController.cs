@@ -26,6 +26,7 @@ public class ThirdPersonShootingController : MonoBehaviour
     private float autoFireTimer = 0f;  // Timer for automatic firing
     private Transform transform;
     private Animator animator;  
+    private int currentLayerIndex;
         
     void Start()
     {
@@ -33,6 +34,7 @@ public class ThirdPersonShootingController : MonoBehaviour
         thirdPersonController = GetComponent<ThirdPersonController>();
         animator = GetComponent<Animator>();
         transform =  GetComponent<Transform>();
+        currentLayerIndex = 1;
     }
 
     void Update()
@@ -48,6 +50,17 @@ public class ThirdPersonShootingController : MonoBehaviour
         {
             autoFireTimer -= Time.deltaTime;
         }
+
+        if(mainController.GetCurrentWeapon().name == "pistol" || mainController.GetCurrentWeapon().name == "revolver")
+        {
+            currentLayerIndex = 1;
+            animator.SetLayerWeight(2, Mathf.Lerp(animator.GetLayerWeight(2), 0f, Time.deltaTime * 10f));
+        }
+        else //todo :check if the user can have no weapon equipped..
+        {
+            currentLayerIndex = 2;
+            animator.SetLayerWeight(currentLayerIndex, Mathf.Lerp(animator.GetLayerWeight(currentLayerIndex), 1f, Time.deltaTime * 10f));
+        }
     }
 
     private void HandleAiming(bool isAiming)
@@ -61,7 +74,14 @@ public class ThirdPersonShootingController : MonoBehaviour
             Vector3 mouseWorldPosition = GetMouseWorldPosition();
             RotateTowardsTarget(mouseWorldPosition);
             animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
-            animator.SetTrigger("Aim");
+            if( currentLayerIndex == 1)
+            {
+                animator.SetBool("Aim",true);
+            }
+            else
+            {
+                animator.SetBool("AimRifle",true);
+            }
             crosshair.SetActive(true);
             starterAssetsInputs.sprint = false;
             rigBuilder.enabled = true;
@@ -96,10 +116,16 @@ public class ThirdPersonShootingController : MonoBehaviour
         else
         {
             animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
-            animator.SetBool("Aim", false);
             crosshair.SetActive(false);
             rigBuilder.enabled = false;
- 
+            if( currentLayerIndex == 1)
+            {
+                animator.SetBool("Aim", false);
+            }
+            else
+            {
+                animator.SetBool("AimRifle", false);
+            }
         }
     }
 
