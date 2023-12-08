@@ -8,7 +8,7 @@ public class ThirdPersonShootingController : MonoBehaviour
 {
     //to get the current weapon and switch between the layers & masks
     public MainController mainController;
-
+    
     //colliders
     public LayerMask aimColliderLayerMask = new LayerMask();
 
@@ -35,6 +35,8 @@ public class ThirdPersonShootingController : MonoBehaviour
         animator = GetComponent<Animator>();
         transform =  GetComponent<Transform>();
         currentLayerIndex = 1;
+        //get the hud textmeshpro element based on the current weapon
+
     }
 
     void Update()
@@ -43,7 +45,7 @@ public class ThirdPersonShootingController : MonoBehaviour
 
         if (starterAssetsInputs.aim)
         {
-            HandleShooting();
+            HandleShooting();   
         }
        // Update the auto fire timer: check this
         if (autoFireTimer > 0)
@@ -72,6 +74,7 @@ public class ThirdPersonShootingController : MonoBehaviour
 
         if (isAiming)
         {
+            mainController.GetCurrentWeapon().EnableWeaponHUD();
             Vector3 mouseWorldPosition = GetMouseWorldPosition();
             RotateTowardsTarget(mouseWorldPosition);
             animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
@@ -116,6 +119,7 @@ public class ThirdPersonShootingController : MonoBehaviour
         }
         else
         {
+            mainController.GetCurrentWeapon().DisableWeaponHUD();
             animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
             crosshair.SetActive(false);
             rigBuilder.enabled = false;

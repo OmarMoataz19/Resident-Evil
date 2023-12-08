@@ -8,6 +8,7 @@ public class HealthController : MonoBehaviour
     public Material highHpMaterial;
     public Material mediumHpMaterial;
     public Material lowHpMaterial;
+    public Material defaultHpMaterial;
 
     private int maxHp;
     private int currentHp;
@@ -35,7 +36,9 @@ public class HealthController : MonoBehaviour
             }
             else
             {
-                hpSegments[i].SetActive(false); // Deactivate segment
+                //change to the default material
+                hpSegments[i].GetComponent<Renderer>().material = defaultHpMaterial;
+                // hpSegments[i].SetActive(false); // Deactivate segment
             }
         }
     }

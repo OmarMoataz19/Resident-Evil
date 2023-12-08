@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public abstract class Weapon : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public abstract class Weapon : MonoBehaviour
     //graphics
     public Animator animator;
     public Transform attackPoint;
+    public TextMeshPro ammoText;
     public GameObject muzzleFlash , bulletHoleGraphic;
     //colliders
     public LayerMask aimColliderLayerMask; //to determine the crosshair collision
@@ -55,8 +57,15 @@ public abstract class Weapon : MonoBehaviour
 
             Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
             bulletsLeft--;
-
+            UpdateHUD();
             Invoke(nameof(ResetShot), timeBetweenShooting);
+        }
+    }
+    public virtual void UpdateHUD()
+    {
+        if (ammoText != null)
+        {
+            ammoText.text = ""+bulletsLeft;
         }
     }
      private void ResetShot()
@@ -106,5 +115,22 @@ public abstract class Weapon : MonoBehaviour
     public float GetTimeBetweenShooting()
     {
         return timeBetweenShooting;
+    }
+
+    //disable the weapon hud
+    public void DisableWeaponHUD()
+    {
+        if (ammoText != null)
+        {
+            ammoText.gameObject.SetActive(false);
+        }
+    }
+    //show the weapon hud
+    public void EnableWeaponHUD()
+    {
+        if (ammoText != null)
+        {
+            ammoText.gameObject.SetActive(true);
+        }
     }
 }
