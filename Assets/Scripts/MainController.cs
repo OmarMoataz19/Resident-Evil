@@ -6,6 +6,7 @@ public class MainController : MonoBehaviour
 {
     private int hp;
     private int gold;
+    public HealthController  healthController;
     //knife durability..
     // inventory
 
@@ -13,11 +14,24 @@ public class MainController : MonoBehaviour
     private Weapon currentWeapon;
     void Start()
     {
+        hp = 8;
         EquipWeapon(startingWeapon);
     }
     void Update()
     {
-        
+        //to be removed 
+        //if key is pressed is 1 increase hp by 1 
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            healthController.SetHp(hp + 1);
+            hp++;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            healthController.SetHp(hp - 1);
+            hp --;
+
+        }
     }
     public void EquipWeapon(Weapon weapon)
     {

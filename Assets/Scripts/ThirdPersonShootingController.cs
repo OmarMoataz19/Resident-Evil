@@ -61,6 +61,7 @@ public class ThirdPersonShootingController : MonoBehaviour
             currentLayerIndex = 2;
             animator.SetLayerWeight(currentLayerIndex, Mathf.Lerp(animator.GetLayerWeight(currentLayerIndex), 1f, Time.deltaTime * 10f));
         }
+        HandleReload();
     }
 
     private void HandleAiming(bool isAiming)
@@ -181,6 +182,19 @@ public class ThirdPersonShootingController : MonoBehaviour
                         autoFireTimer = currentWeapon.GetTimeBetweenShooting();
                     }
                 }
+            }
+        }
+    }
+    private void HandleReload()
+    {
+        Weapon currentWeapon = mainController.GetCurrentWeapon();
+        if (currentWeapon != null)
+        {
+            if (starterAssetsInputs.reload)
+            {
+                currentWeapon.Reload();
+                animator.SetTrigger("PerformReload");
+                starterAssetsInputs.reload = false;
             }
         }
     }
