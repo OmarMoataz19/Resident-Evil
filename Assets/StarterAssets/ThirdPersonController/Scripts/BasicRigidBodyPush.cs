@@ -8,8 +8,17 @@ public class BasicRigidBodyPush : MonoBehaviour
 
 	private void OnControllerColliderHit(ControllerColliderHit hit)
 	{
+		// Debug.Log(hit.gameObject.tag);
 		if (canPush) PushRigidBodies(hit);
 	}
+
+    private void OnTriggerEnter(Collider other)
+    {
+		if(other.gameObject.CompareTag("Weapon")){
+			other.gameObject.GetComponent<AxeThrowProjectile>().didHit = true;
+			GetComponent<LeonAnimationController>().axeThrowHit();
+		}
+    }
 
 	private void PushRigidBodies(ControllerColliderHit hit)
 	{
