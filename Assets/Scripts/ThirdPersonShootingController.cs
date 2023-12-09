@@ -64,6 +64,7 @@ public class ThirdPersonShootingController : MonoBehaviour
             animator.SetLayerWeight(currentLayerIndex, Mathf.Lerp(animator.GetLayerWeight(currentLayerIndex), 1f, Time.deltaTime * 10f));
         }
         HandleReload();
+
     }
 
     private void HandleAiming(bool isAiming)
@@ -202,7 +203,10 @@ public class ThirdPersonShootingController : MonoBehaviour
                     animator.SetBool("AimRifle",false);
                     animator.SetBool("Aim",false);
                     starterAssetsInputs.aim = false;
-
+                    if ((mainController.GetCurrentWeapon().name == "pistol" || mainController.GetCurrentWeapon().name == "revolver") && mainController.GetCurrentWeapon().GetIsReloading() == true) 
+                    {
+                        animator.SetLayerWeight(3,1f);
+                    }                    
                     animator.SetTrigger("PerformReload");
 
                     starterAssetsInputs.reload = false;
