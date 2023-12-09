@@ -194,11 +194,19 @@ public class ThirdPersonShootingController : MonoBehaviour
         Weapon currentWeapon = mainController.GetCurrentWeapon();
         if (currentWeapon != null)
         {
-            if (starterAssetsInputs.reload)
+            if (Input.GetKeyDown(KeyCode.R))
             {
-                currentWeapon.Reload();
-                animator.SetTrigger("PerformReload");
-                starterAssetsInputs.reload = false;
+                if(mainController.GetCurrentWeapon().GetIsReloading() == false && mainController.GetCurrentWeapon().GetBulletsLeft() != mainController.GetCurrentWeapon().GetMagazineSize())
+                {   
+                    currentWeapon.Reload();
+                    animator.SetBool("AimRifle",false);
+                    animator.SetBool("Aim",false);
+                    starterAssetsInputs.aim = false;
+
+                    animator.SetTrigger("PerformReload");
+
+                    starterAssetsInputs.reload = false;
+                }
             }
         }
     }

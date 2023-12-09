@@ -75,6 +75,7 @@ public abstract class Weapon : MonoBehaviour
     private void ReloadFinished()
     {
         bulletsLeft = magazineSize;
+        UpdateHUD();
         isReloading = false;
     }
     protected virtual void HandleHit(RaycastHit hit)
@@ -84,8 +85,14 @@ public abstract class Weapon : MonoBehaviour
 
     public virtual void Reload()
     {
+        if (bulletsLeft == magazineSize || isReloading)
+        {
+            return;
+        }
+        //todo: check if there is enough ammo from inventory..
         isReloading = true;
         animator.SetTrigger("Reload");
+        Invoke(nameof(ReloadFinished), reloadTime);
     }
     protected bool IsTargetInRange(RaycastHit hit)
     {
@@ -132,5 +139,17 @@ public abstract class Weapon : MonoBehaviour
         {
             ammoText.gameObject.SetActive(true);
         }
+    }
+    public bool GetIsReloading()
+    {
+        return isReloading;
+    }
+    public int GetBulletsLeft()
+    {
+        return bulletsLeft;
+    }
+    public int GetMagazineSize()
+    {
+        return magazineSize;
     }
 }
