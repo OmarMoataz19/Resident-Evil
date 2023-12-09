@@ -34,7 +34,7 @@ public class ThirdPersonShootingController : MonoBehaviour
         thirdPersonController = GetComponent<ThirdPersonController>();
         animator = GetComponent<Animator>();
         transform =  GetComponent<Transform>();
-        currentLayerIndex = 1;
+        currentLayerIndex = 6;
         //get the hud textmeshpro element based on the current weapon
 
     }
@@ -55,12 +55,12 @@ public class ThirdPersonShootingController : MonoBehaviour
 
         if(mainController.GetCurrentWeapon().name == "pistol" || mainController.GetCurrentWeapon().name == "revolver")
         {
-            currentLayerIndex = 1;
-            animator.SetLayerWeight(2, Mathf.Lerp(animator.GetLayerWeight(2), 0f, Time.deltaTime * 10f));
+            currentLayerIndex = 6;
+            animator.SetLayerWeight(7, Mathf.Lerp(animator.GetLayerWeight(7), 0f, Time.deltaTime * 10f));
         }
         else //todo :check if the user can have no weapon equipped..
         {
-            currentLayerIndex = 2;
+            currentLayerIndex = 7;
             animator.SetLayerWeight(currentLayerIndex, Mathf.Lerp(animator.GetLayerWeight(currentLayerIndex), 1f, Time.deltaTime * 10f));
         }
         HandleReload();
@@ -78,8 +78,8 @@ public class ThirdPersonShootingController : MonoBehaviour
             mainController.GetCurrentWeapon().EnableWeaponHUD();
             Vector3 mouseWorldPosition = GetMouseWorldPosition();
             RotateTowardsTarget(mouseWorldPosition);
-            animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
-            if( currentLayerIndex == 1)
+            animator.SetLayerWeight(6, Mathf.Lerp(animator.GetLayerWeight(6), 1f, Time.deltaTime * 10f));
+            if( currentLayerIndex == 6)
             {
                 animator.SetBool("Aim",true);
             }
@@ -121,10 +121,10 @@ public class ThirdPersonShootingController : MonoBehaviour
         else
         {
             mainController.GetCurrentWeapon().DisableWeaponHUD();
-            animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
+            animator.SetLayerWeight(6, Mathf.Lerp(animator.GetLayerWeight(6), 0f, Time.deltaTime * 10f));
             crosshair.SetActive(false);
             rigBuilder.enabled = false;
-            if( currentLayerIndex == 1)
+            if( currentLayerIndex == 6)
             {
                 animator.SetBool("Aim", false);
             }
@@ -205,7 +205,7 @@ public class ThirdPersonShootingController : MonoBehaviour
                     starterAssetsInputs.aim = false;
                     if ((mainController.GetCurrentWeapon().name == "pistol" || mainController.GetCurrentWeapon().name == "revolver") && mainController.GetCurrentWeapon().GetIsReloading() == true) 
                     {
-                        animator.SetLayerWeight(3,1f);
+                        animator.SetLayerWeight(8,1f);
                     }                    
                     animator.SetTrigger("PerformReload");
 
