@@ -51,7 +51,7 @@ public abstract class Weapon : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 999f, aimColliderLayerMask))
             {
-                Debug.Log(hit.collider.name);
+                //Debug.Log(hit.collider.name);
                 HandleHit(hit);
             }
 
@@ -98,18 +98,20 @@ public abstract class Weapon : MonoBehaviour
     {
         float hitDistance = Vector3.Distance(hit.point, attackPoint.position);
         // range limits for Short, Medium, and Long ranges , those are experimental values
-        float maxRange = weaponRange == Range.Short ? 10f : 
-                        weaponRange == Range.Medium ? 20f : 
-                        30f;
+        float maxRange = weaponRange == Range.Short ? 3f : 
+                        weaponRange == Range.Medium ? 7f : 
+                        10f;
         return hitDistance <= maxRange;
     }
     protected void DealDamage(RaycastHit hit, int weaponDamage)
     {
         // Check if the hit object is an enemy
-        if (whatIsEnemy == (whatIsEnemy | (1 << hit.collider.gameObject.layer)))
+        if (hit.collider.gameObject.layer == 7)
         {
+            float hitDistance = Vector3.Distance(hit.point, attackPoint.position);
+            print(hitDistance);
             // Deal damage to the enemy
-            //hit.collider.gameObject.GetComponent<Zombie>().TakeDamage(weaponDamage);
+            hit.collider.gameObject.GetComponent<ZombieMain>().GetHit(weaponDamage);
         }
     }
 

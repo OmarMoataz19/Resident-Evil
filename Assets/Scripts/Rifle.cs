@@ -23,5 +23,6 @@ public class Rifle : Weapon
         {
             DealDamage(hit, damage);
         }
+  
     }
 }

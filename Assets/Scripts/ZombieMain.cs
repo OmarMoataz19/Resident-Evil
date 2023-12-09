@@ -188,6 +188,7 @@ public class ZombieMain : MonoBehaviour
     }
 
     public void GetHit(int damage){
+        print(damage);
         if(damage>= health){
             ZombieAnimator.Play("Zombie Death 2");
             agent.enabled = false;
