@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LeonAnimationController : MonoBehaviour
 {
+    public MainController mainController;
     Animator LeonAnimator;
     StarterAssets.StarterAssetsInputs playerInputController;
     public GameObject knife;
@@ -158,11 +159,13 @@ public class LeonAnimationController : MonoBehaviour
     public void dealDamage(int x){
         if(x>=LeonHP){
             LeonHP = 0;
+            mainController.SetHp(LeonHP);
             LeonAnimator.SetTrigger("Death");
             stopMovment();
         }
         else{
             LeonHP -= x;
+            mainController.SetHp(LeonHP);
         }
         isInvincible = true;
         StartCoroutine(SetInvincibleFalse());

@@ -21,17 +21,17 @@ public class MainController : MonoBehaviour
     {
         //to be removed 
         //if key is pressed is 1 increase hp by 1 
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            healthController.SetHp(hp + 1);
-            hp++;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            healthController.SetHp(hp - 1);
-            hp --;
+        // if(Input.GetKeyDown(KeyCode.Alpha1))
+        // {
+        //     healthController.SetHp(hp + 1);
+        //     hp++;
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha2))
+        // {
+        //     healthController.SetHp(hp - 1);
+        //     hp --;
 
-        }
+        // }
     }
     public void EquipWeapon(Weapon weapon)
     {
@@ -47,5 +47,10 @@ public class MainController : MonoBehaviour
     public Weapon GetCurrentWeapon()
     {
         return currentWeapon;
+    }
+    public void SetHp(int newHp)
+    {
+            healthController.SetHp(newHp);
+            hp = newHp;
     }
 }
