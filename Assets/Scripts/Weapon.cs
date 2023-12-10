@@ -22,7 +22,9 @@ public abstract class Weapon : MonoBehaviour
     public Animator animator;
     public Transform attackPoint;
     public TextMeshPro ammoText;
-    public GameObject muzzleFlash , bulletHoleGraphic;
+    public GameObject muzzleFlash , ImpactEffect, ImpactZombieEffect;
+    public Vector3 direction;
+    public GameObject[] BloodFX;
     //colliders
     public LayerMask aimColliderLayerMask; //to determine the crosshair collision
     public LayerMask whatIsEnemy; //to determine what is a zombie
@@ -103,15 +105,79 @@ public abstract class Weapon : MonoBehaviour
                         10f;
         return hitDistance <= maxRange;
     }
+
+    Transform GetNearestObject(Transform hit, Vector3 hitPos)
+    {
+        var closestPos = 100f;
+        Transform closestBone = null;
+        var childs = hit.GetComponentsInChildren<Transform>();
+
+        foreach (var child in childs)
+        {
+            var dist = Vector3.Distance(child.position, hitPos);
+            if (dist < closestPos)
+            {
+                closestPos = dist;
+                closestBone = child;
+            }
+        }
+
+        var distRoot = Vector3.Distance(hit.position, hitPos);
+        if (distRoot < closestPos)
+        {
+            closestPos = distRoot;
+            closestBone = hit;
+        }
+        return closestBone;
+    }
     protected void DealDamage(RaycastHit hit, int weaponDamage)
     {
         // Check if the hit object is an enemy
         if (hit.collider.gameObject.layer == 7)
         {
-            float hitDistance = Vector3.Distance(hit.point, attackPoint.position);
-            print(hitDistance);
+
+        //Instantiate(ImpactZombieEffect , hit.point + (hit.normal * 0.01f) , Quaternion.FromToRotation(Vector3.up, hit.normal));
+            float angle = Mathf.Atan2(hit.normal.x, hit.normal.z) * Mathf.Rad2Deg + 180;
+
+            var effectIdx = Random.Range(0, BloodFX.Length);
+            if (effectIdx == BloodFX.Length) effectIdx = 0;
+
+            var instance = Instantiate(BloodFX[effectIdx], hit.point, Quaternion.Euler(0, angle + 90, 0));
+            effectIdx++;
+
+            var settings = instance.GetComponent<BFX_BloodSettings>();
+            //settings.FreezeDecalDisappearance = InfiniteDecal;
+            //settings.LightIntensityMultiplier = DirLight.intensity;
+
+            var nearestBone = GetNearestObject(hit.transform.root, hit.point);
+            if(nearestBone != null)
+            {
+                var attachBloodInstance = Instantiate(ImpactZombieEffect);
+                var bloodT = attachBloodInstance.transform;
+                bloodT.position = hit.point;
+                bloodT.localRotation = Quaternion.identity;
+                bloodT.localScale = Vector3.one * Random.Range(0.75f, 1.2f);
+                bloodT.LookAt(hit.point + hit.normal, direction);
+                bloodT.Rotate(90, 0, 0);
+                bloodT.transform.parent = nearestBone;
+                //Destroy(attachBloodInstance, 20);
+            }
+
+
             // Deal damage to the enemy
             hit.collider.gameObject.GetComponent<ZombieMain>().GetHit(weaponDamage);
+        }
+        else
+        {
+            
+                //Instantiate(bloodSplatter, raycastHit.point, Quaternion.identity);
+                var effectIstance = Instantiate(ImpactEffect, hit.point, new Quaternion()) as GameObject;
+                effectIstance.transform.LookAt(hit.point + hit.normal);
+                Destroy(effectIstance, 1);
+
+                // var impactEffectIstance = Instantiate(ImpactEffect, transform.position, transform.rotation) as GameObject;
+
+                // Destroy(impactEffectIstance, 4);
         }
     }
 
