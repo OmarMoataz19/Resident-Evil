@@ -39,6 +39,7 @@ public class GrenadeThrower : MonoBehaviour
     private bool IsGrenadeThrowAvailable = true;
     private LayerMask GrenadeCollisionMask;
     public MainController mainController;
+    public LeonAnimationController leonAnimationController;
     private void Awake()
     {
         InitialParent = Grenade.transform.parent;
@@ -69,10 +70,11 @@ public class GrenadeThrower : MonoBehaviour
                 Camera.transform.rotation.eulerAngles.y,
                 Animator.transform.eulerAngles.z
             );
-
+            if(!leonAnimationController.isGrappled)
+            {
             DrawProjection();
             Animator.SetTrigger("Hold Grenade");
-
+            }
         }
         else
         {
@@ -126,7 +128,14 @@ public class GrenadeThrower : MonoBehaviour
         Grenade.isKinematic = false;
         Grenade.freezeRotation = false;
         Grenade.transform.SetParent(null, true);
-        Grenade.AddForce(Camera.transform.forward * ThrowStrength, ForceMode.Impulse);
+        if(leonAnimationController.isGrappled)
+        {
+            Grenade.AddForce(Vector3.up * ThrowStrength, ForceMode.Impulse);
+        }
+        else
+        {
+            Grenade.AddForce(Camera.transform.forward * ThrowStrength, ForceMode.Impulse);
+        }
         StartCoroutine(ExplodeGrenade());
     }
 

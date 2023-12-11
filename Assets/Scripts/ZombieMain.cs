@@ -74,7 +74,7 @@ public class ZombieMain : MonoBehaviour
                     ZombieAnimator.SetTrigger("AxeSwipe");
                 }
                 else{
-                    if(Random.Range(1,4) == 1 && !ZombieAnimator.GetBool("Punch") && !ZombieAnimator.GetBool("isPunch")){
+                    if(Random.Range(1,2) == 1 && !ZombieAnimator.GetBool("Punch") && !ZombieAnimator.GetBool("isPunch")){
                         ZombieAnimator.SetBool("isGrab",true);
                         ZombieAnimator.SetTrigger("Grab");
                     }

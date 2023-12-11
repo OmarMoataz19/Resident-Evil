@@ -34,7 +34,7 @@ public class LeonAnimationController : MonoBehaviour
     {
     
         //Leon Uses his grenade
-        if(isGrappled && Input.GetKeyDown(KeyCode.X)){
+        if(isGrappled && Input.GetKeyDown(KeyCode.G)){
             LeonAnimator.Play("Leon Throw Up Grenade");
             threwGrenade = true;
             holdingZombieScipt.grappleBroken = true;
