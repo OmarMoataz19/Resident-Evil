@@ -38,7 +38,7 @@ public class GrenadeThrower : MonoBehaviour
 
     private bool IsGrenadeThrowAvailable = true;
     private LayerMask GrenadeCollisionMask;
-
+    public MainController mainController;
     private void Awake()
     {
         InitialParent = Grenade.transform.parent;
@@ -51,13 +51,17 @@ public class GrenadeThrower : MonoBehaviour
         {
             if (!Physics.GetIgnoreLayerCollision(grenadeLayer, i))
             {
-                GrenadeCollisionMask |= 1 << i; // magic
+                GrenadeCollisionMask |= 1 << i; 
             }
         }
     }
 
     private void Update()
     {
+        if(mainController.GetCurrentGrenade() != null)
+        {
+           Grenade = mainController.GetCurrentGrenade().GetComponent<Rigidbody>();
+        }
         if (Application.isFocused && Input.GetKey(KeyCode.G))
         {
             Animator.transform.rotation = Quaternion.Euler(
@@ -130,8 +134,8 @@ public class GrenadeThrower : MonoBehaviour
     {
         yield return new WaitForSeconds(ExplosionDelay);
 
-        Instantiate(ExplosionParticleSystem, Grenade.transform.position, Quaternion.identity);
-
+        //Instantiate(ExplosionParticleSystem, Grenade.transform.position, Quaternion.identity);
+        mainController.GetCurrentGrenade().Explode();
         Grenade.GetComponent<Cinemachine.CinemachineImpulseSource>().GenerateImpulse(new Vector3(Random.Range(-1, 1), Random.Range(0.5f, 1), Random.Range(-1, 1)));
 
         Grenade.freezeRotation = true;

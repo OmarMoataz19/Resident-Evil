@@ -5,8 +5,8 @@ using UnityEngine;
 public abstract class Grenade : MonoBehaviour
 {
 
-    public float grenadeDelay = 3f;
-    public float radius = 50f;
+    protected float grenadeDelay = 3f;
+    protected float radius = 3f;
 
     // grenade prices
     private float buyPrice = 15f;

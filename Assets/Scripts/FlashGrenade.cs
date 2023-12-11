@@ -19,7 +19,11 @@ public class FlashGrenade : Grenade
 
         foreach (Collider collider in surrounding)
         {
-            // TODO : No force will be applied here just get the enemies and knockdown
+            if (collider.gameObject.layer == 7 && collider.isTrigger)
+            {
+                //decrement health
+                collider.gameObject.GetComponent<ZombieMain>().StunZombie();
+            }
 
             Rigidbody rb = collider.GetComponent<Rigidbody>();
             if (rb != null)
@@ -34,7 +38,7 @@ public class FlashGrenade : Grenade
 
 
         // remove grenade
-        Destroy(gameObject);
+       // Destroy(gameObject);
     }
 
     public float getKnockDownTime()

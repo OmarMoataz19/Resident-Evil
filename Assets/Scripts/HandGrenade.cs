@@ -6,7 +6,7 @@ public class HandGrenade : Grenade
 {
     public GameObject handGrenadeEffect;
     float force = 700f;
-    float handGrenadeDamage = 4f;
+    int handGrenadeDamage = 4;
 
     public override void Explode()
     {
@@ -19,7 +19,11 @@ public class HandGrenade : Grenade
         foreach (Collider collider in surrounding)
         {
             // enemy affected and decrement their damage
-
+            if (collider.gameObject.layer == 7 && collider.isTrigger)
+            {
+                //decrement health
+                collider.gameObject.GetComponent<ZombieMain>().GetHit(handGrenadeDamage);
+            }
             // any rigid body affected
             Rigidbody rb = collider.GetComponent<Rigidbody>();
 
@@ -28,9 +32,6 @@ public class HandGrenade : Grenade
                 rb.AddExplosionForce(force, transform.position, radius);
             }
         }
-
-        // remove grenade
-        Destroy(gameObject);
     }
 
     public float GetHandGrenadeDamage()
