@@ -39,11 +39,11 @@ public abstract class Weapon : MonoBehaviour
     protected FiringMode firingMode;
 
     //control variables
-    protected bool isReloading , isReadyToShoot;
-
+    protected bool isReloading ;
+    protected bool isReadyToShoot = true;
     public virtual void Shoot()
     {
-        isReadyToShoot = true;
+        //isReadyToShoot = true;
         if (bulletsLeft > 0 && !isReloading && isReadyToShoot)
         {
             animator.SetTrigger("Shoot");

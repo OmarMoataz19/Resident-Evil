@@ -7,7 +7,7 @@ public class Revolver : Weapon
     private void Awake()
     {
         damage = 5;
-        timeBetweenShooting = 1f;
+        timeBetweenShooting = 1.0f;
         weaponRange = Range.Long;
        // reloadTime = 4f; 
         magazineSize = 6;
