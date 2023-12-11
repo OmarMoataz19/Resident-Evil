@@ -12,6 +12,7 @@ public class MainController : MonoBehaviour
 
     [SerializeField] private Weapon startingWeapon;
     private Weapon currentWeapon;
+    public Grenade currentGrenade;
     void Start()
     {
         hp = 8;
@@ -52,5 +53,18 @@ public class MainController : MonoBehaviour
     {
             healthController.SetHp(newHp);
             hp = newHp;
+    }
+
+    public Grenade GetCurrentGrenade()
+    {
+        return currentGrenade;
+    }
+    //equip grenade
+    public void EquipGrenade(Grenade grenade)
+    {
+        if (currentGrenade != null)
+        {
+            //todo: Handle equipping the current grenade
+        }
     }
 }

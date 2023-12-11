@@ -160,7 +160,7 @@ public abstract class Weapon : MonoBehaviour
                 bloodT.LookAt(hit.point + hit.normal, direction);
                 bloodT.Rotate(90, 0, 0);
                 bloodT.transform.parent = nearestBone;
-                //Destroy(attachBloodInstance, 20);
+                Destroy(attachBloodInstance, 20);
             }
 
 
@@ -169,15 +169,9 @@ public abstract class Weapon : MonoBehaviour
         }
         else
         {
-            
-                //Instantiate(bloodSplatter, raycastHit.point, Quaternion.identity);
                 var effectIstance = Instantiate(ImpactEffect, hit.point, new Quaternion()) as GameObject;
                 effectIstance.transform.LookAt(hit.point + hit.normal);
                 Destroy(effectIstance, 1);
-
-                // var impactEffectIstance = Instantiate(ImpactEffect, transform.position, transform.rotation) as GameObject;
-
-                // Destroy(impactEffectIstance, 4);
         }
     }
 

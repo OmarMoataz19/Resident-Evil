@@ -64,7 +64,6 @@ public class ThirdPersonShootingController : MonoBehaviour
             animator.SetLayerWeight(currentLayerIndex, Mathf.Lerp(animator.GetLayerWeight(currentLayerIndex), 1f, Time.deltaTime * 10f));
         }
         HandleReload();
-
     }
 
     private void HandleAiming(bool isAiming)
