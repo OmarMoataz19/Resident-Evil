@@ -16,4 +16,6 @@ MonoBehaviour:
   itemName: HG Gun Powder
   icon: {fileID: 21300000, guid: 978f047aff398634da9db7677d51713d, type: 3}
   ItemType: 5
+  baseCost: 20
+  sellPrice: 15
   GunPowderType: 1

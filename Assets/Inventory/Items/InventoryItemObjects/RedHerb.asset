@@ -16,4 +16,6 @@ MonoBehaviour:
   itemName: Red Herb
   icon: {fileID: 21300000, guid: eba6e0fe1d7d976448bd6eff8a6ef684, type: 3}
   ItemType: 4
+  baseCost: 10
+  sellPrice: 5
   HerbType: 0

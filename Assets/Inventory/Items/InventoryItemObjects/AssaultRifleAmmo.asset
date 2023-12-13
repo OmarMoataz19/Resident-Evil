@@ -16,5 +16,7 @@ MonoBehaviour:
   itemName: AR Ammo
   icon: {fileID: 21300000, guid: 5e63500612f560245ab711f04b30af92, type: 3}
   ItemType: 1
+  baseCost: 50
+  sellPrice: 0
   AmmoType: 2
   Amount: 0

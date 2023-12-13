@@ -16,4 +16,6 @@ MonoBehaviour:
   itemName: Emerald
   icon: {fileID: 21300000, guid: fe1703bda0505ee4fabbaae91bb5cf0f, type: 3}
   ItemType: 7
+  baseCost: 0
+  sellPrice: 500
   TreasureType: 2

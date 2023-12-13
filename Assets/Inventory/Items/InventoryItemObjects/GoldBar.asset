@@ -16,4 +16,6 @@ MonoBehaviour:
   itemName: Gold Bar
   icon: {fileID: 21300000, guid: a45fdab9abc37ad4ea07f8ecdb86a995, type: 3}
   ItemType: 7
+  baseCost: 0
+  sellPrice: 100
   TreasureType: 0

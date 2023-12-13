@@ -16,4 +16,6 @@ MonoBehaviour:
   itemName: Flash Grenade
   icon: {fileID: 21300000, guid: 73003bde45119e44197ede6d4328756c, type: 3}
   ItemType: 2
+  baseCost: 15
+  sellPrice: 10
   GrenadeType: 1

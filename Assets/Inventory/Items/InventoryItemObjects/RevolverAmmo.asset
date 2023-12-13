@@ -16,5 +16,7 @@ MonoBehaviour:
   itemName: Revolver Ammo
   icon: {fileID: 21300000, guid: 8aedbf3c08922a04cb570d4815f3e660, type: 3}
   ItemType: 1
+  baseCost: 70
+  sellPrice: 0
   AmmoType: 1
   Amount: 12

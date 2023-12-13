@@ -9,7 +9,6 @@ public class Inventory : MonoBehaviour
     public InventoryManager invManager;
     public GameObject inventory;
     public bool inventoryActive = false;
-
     void Start()
     {
         
@@ -18,7 +17,7 @@ public class Inventory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) && !invManager.shopOpened )
         {
             inventoryActive = !inventoryActive;
 

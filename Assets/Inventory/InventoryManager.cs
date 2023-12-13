@@ -12,8 +12,9 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
     public List<InventoryItem> Items = new List<InventoryItem>();
-
+    public List<InventoryItem> StorageItems = new List<InventoryItem>();
     public Transform ItemContent;
+    public Transform StorageContent;
     public GameObject InventoryItem;
 
     public EquippedPanelController equippedPanelController;
@@ -27,6 +28,7 @@ public class InventoryManager : MonoBehaviour
 
     // Inventory control flags.
     private int selectedItemIndex = -1;
+    public bool ShowStorage = false;
 
 
     // Equipped variables.
@@ -38,6 +40,7 @@ public class InventoryManager : MonoBehaviour
     private int firstIngredient = -1;
     public List<Sprite> craftedSprites = new List<Sprite>();
 
+    public bool shopOpened = false;
     private void Awake()
     {
         Instance = this;
@@ -73,13 +76,26 @@ public class InventoryManager : MonoBehaviour
         equippedWeapon = pistol;
     }
 
-    public void SelectItem(string itemIndex)
+    public void SelectItem(string itemIndex, string inInventory)
     {
         int index;
         if (int.TryParse(itemIndex, out index))
         {
             selectedItemIndex = index;
-            InventoryItem selectedItem = Items[selectedItemIndex];
+            InventoryItem selectedItem = null;
+
+            if (inInventory.Equals("0"))
+            {
+                if (selectedItemIndex<Items.Count())
+                {
+                    selectedItem = Items[selectedItemIndex];
+                }
+            }
+            if (inInventory.Equals("1"))
+            {
+                selectedItem = StorageItems[selectedItemIndex];
+            }
+            
             if (isCraftModeOn)
             {
                 if(selectedItemIndex == firstIngredient)
@@ -135,6 +151,61 @@ public class InventoryManager : MonoBehaviour
                 ResetInventoryFlags();
                 ListItems();
             }
+            else if(ShowStorage)
+            {
+              
+                if(inInventory.Equals("0"))
+                {
+                    if (selectedItem != null)
+                    {
+                        if (selectedItem is AmmoItem)
+                        {
+                            AddAmmoToStorage((selectedItem as AmmoItem));
+                        }
+                        else
+                        {
+                            StorageItems.Add(selectedItem);
+                        }
+                        Items.Remove(selectedItem);
+                        ListStorageItems();
+                        ListItems();
+                    }
+                    else
+                    {
+                        Debug.Log("Please select a valid item");
+                    }
+                }
+                else
+                {
+                    
+                    if (selectedItem is AmmoItem)
+                    {
+                        var check = AddAmmoToInventory((selectedItem as AmmoItem));
+                        if (check)
+                        {
+                            StorageItems.Remove(selectedItem);
+                        }
+                        else
+                        {
+                            Debug.Log("Inventory full");
+                        }
+                    }
+                    
+                    else
+                    { 
+                         var check = Add(selectedItem);
+                         if (check)
+                         {
+                             StorageItems.Remove(selectedItem);
+                         }
+                        else
+                        {
+                            Debug.Log("Inventory full");
+                        }
+                    }
+                        ListStorageItems();
+                }
+            }
             else
             {
                 ListButtons(selectedItem);
@@ -147,13 +218,36 @@ public class InventoryManager : MonoBehaviour
     {
         foreach (var item in Items)
         {
-            if( item is AmmoItem && (item as AmmoItem).AmmoType == ammo.AmmoType)
+            Debug.Log(ammo.AmmoType);
+            Debug.Log(item.itemName);
+
+            if ( item is AmmoItem && (item as AmmoItem).AmmoType == ammo.AmmoType)
             {
                 (item as AmmoItem).Amount += ammo.Amount;
+                ListItems();
                 return true;
             }
         }
-        return false;
+        var ammoCheck = Add(ammo);
+        return ammoCheck;
+    }
+    
+    public bool AddAmmoToStorage(AmmoItem ammo)
+    {
+        foreach (var item in StorageItems)
+        {
+            Debug.Log(ammo.AmmoType);
+            Debug.Log(item.itemName);
+
+            if (item is AmmoItem && (item as AmmoItem).AmmoType == ammo.AmmoType)
+            {
+                (item as AmmoItem).Amount += ammo.Amount;
+                ListItems();
+                return true;
+            }
+        }
+        StorageItems.Add(ammo);
+        return true;
     }
 
     public MixtureItem CraftPotion(HerbItem firstHerb, HerbItem secondHerb)
@@ -263,6 +357,7 @@ public class InventoryManager : MonoBehaviour
             return false;
         }
         Items.Add(item);
+        ListItems();
         return true;
     }
 
@@ -274,6 +369,57 @@ public class InventoryManager : MonoBehaviour
         ListItems();
         selectedItemIndex = -1;
         DisableButtons();
+    }
+    public void Sell(int id)
+    {
+        foreach(var item in Items)
+        {
+            if (id == item.id)
+            {
+                Items.Remove(item);
+                ListItems();
+                break;
+            }
+        }
+    }
+    public void ListStorageItems()
+    {
+
+        foreach(Transform item in StorageContent)
+        {
+            Destroy(item.gameObject);
+        }
+
+        int StorageContentCount = 0;
+
+        foreach(var item in StorageItems)
+        {
+            GameObject newStorageItem = Instantiate(InventoryItem,StorageContent);
+
+            var itemIndex = newStorageItem.transform.Find("ItemIndex").GetComponent<TextMeshProUGUI>();
+            var inInventory = newStorageItem.transform.Find("InInventory").GetComponent<TextMeshProUGUI>();
+            var itemName = newStorageItem.transform.Find("ItemName").GetComponent<TextMeshProUGUI>();
+            var itemIcon = newStorageItem.transform.Find("ItemIcon").GetComponent<Image>();
+
+            itemIndex.text = StorageContentCount.ToString();
+            itemName.text = item.itemName;
+            itemIcon.sprite = item.icon;
+            inInventory.text = "1";
+
+
+            itemName.gameObject.SetActive(true);
+            itemIcon.gameObject.SetActive(true);
+
+            if (item is AmmoItem)
+            {
+                var ammoCountText = newStorageItem.transform.Find("AmmoCount").GetComponent<TextMeshProUGUI>();
+                ammoCountText.text = $"x{(item as AmmoItem).Amount}";
+                ammoCountText.gameObject.SetActive(true);
+            }
+
+            StorageContentCount++;
+
+        }
     }
 
     public void ListItems()
