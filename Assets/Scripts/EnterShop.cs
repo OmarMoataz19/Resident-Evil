@@ -20,8 +20,6 @@ public class EnterShop : MonoBehaviour
     {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                print("test");
-                textMeshProUGUI.text = "Press E to Open Store";
                 Shop.SetActive(false);
                 Inventory.SetActive(false);
                 invManager.shopOpened = false;
