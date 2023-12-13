@@ -7,7 +7,8 @@ public class HandGrenade : Grenade
     public GameObject handGrenadeEffect;
     float force = 700f;
     int handGrenadeDamage = 4;
-
+    public LeonAnimationController leonAnimationController;
+    private bool alreadyTookDamage = false;
     public override void Explode()
     {
         // show effect
@@ -16,6 +17,7 @@ public class HandGrenade : Grenade
         // get nearrby Object
         Collider[] surrounding = Physics.OverlapSphere(transform.position, radius);
 
+        alreadyTookDamage = false;
         foreach (Collider collider in surrounding)
         {
             // enemy affected and decrement their damage
@@ -30,6 +32,11 @@ public class HandGrenade : Grenade
             if (rb != null)
             {
                 rb.AddExplosionForce(force, transform.position, radius);
+            }
+            if(collider.gameObject.layer == 8 && !alreadyTookDamage)
+            {
+                leonAnimationController.dealDamage(handGrenadeDamage);
+                alreadyTookDamage = true;
             }
         }
     }
