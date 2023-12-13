@@ -13,7 +13,7 @@ public class EquippedPanelController : MonoBehaviour
     public Image GrenadeImage;
     public TextMeshProUGUI GrenadeName;
 
-    // Durability
+    public MainController mainController;
 
     public void EquipWeapon(WeaponItem weaponItem)
     {
@@ -39,16 +39,19 @@ public class EquippedPanelController : MonoBehaviour
         }
 
         WeaponAmmo.text = $"{weaponItem.Ammo}/{totalAmmo}";
+        mainController.EquipWeapon(weaponItem);
     }
 
-    public void EquipGrenade(GrenadeItem grenadeItem)
+    public void EquipGrenade(GrenadeItem grenadeItem , int index)
     {
         GrenadeName.text = grenadeItem.itemName;
         GrenadeImage.sprite = grenadeItem.icon;
+        mainController.EquipGrenade(grenadeItem , index);
+    }
+    public void RemoveGrenade ()
+    {
+        GrenadeName.text = "";
+        GrenadeImage.sprite = null;
     }
 
-    public void setKnifeDurability()
-    {
-        //TODO.....
-    }
 }

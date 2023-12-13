@@ -23,7 +23,8 @@ public class OpenDorg : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && !opened)
         {
         animator.SetTrigger("DorgOpen");
-        SetColliderToTrue();
+        opened = true;
+        Invoke("SetColliderToTrue",0.6f);
         }
             txt.text = opened ? "" : "Press E To Open Drawer";
         }
@@ -32,6 +33,5 @@ public class OpenDorg : MonoBehaviour
     public void SetColliderToTrue ()
     {
         colliderToBeEnabled.GetComponent<BoxCollider>().enabled = true;
-        opened = true;
     }
 }

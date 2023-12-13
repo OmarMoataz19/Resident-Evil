@@ -40,6 +40,7 @@ public class GrenadeThrower : MonoBehaviour
     private LayerMask GrenadeCollisionMask;
     public MainController mainController;
     public LeonAnimationController leonAnimationController;
+    public InventoryManager inventoryManager;
     private void Awake()
     {
         InitialParent = Grenade.transform.parent;
@@ -63,7 +64,7 @@ public class GrenadeThrower : MonoBehaviour
         {
            Grenade = mainController.GetCurrentGrenade().GetComponent<Rigidbody>();
         }
-        if (Application.isFocused && Input.GetKey(KeyCode.G))
+        if (Application.isFocused && Input.GetKey(KeyCode.G) && mainController.GetCurrentGrenade() != null)
         {
             Animator.transform.rotation = Quaternion.Euler(
                 Animator.transform.eulerAngles.x,
@@ -74,6 +75,7 @@ public class GrenadeThrower : MonoBehaviour
             {
             DrawProjection();
             Animator.SetTrigger("Hold Grenade");
+            mainController.HideWeapons();
             }
         }
         else
@@ -81,11 +83,12 @@ public class GrenadeThrower : MonoBehaviour
             LineRenderer.enabled = false;
         }
         
-        if (Input.GetKeyUp(KeyCode.G) && IsGrenadeThrowAvailable)
+        if (Input.GetKeyUp(KeyCode.G) && IsGrenadeThrowAvailable && mainController.GetCurrentGrenade() != null)
         {
             IsGrenadeThrowAvailable = false;
             Animator.SetTrigger("Throw Grenade");
             Animator.ResetTrigger("Hold Grenade");
+            mainController.ShowWeapon();
             // ReleaseGrenade();
         }
     }
@@ -136,6 +139,7 @@ public class GrenadeThrower : MonoBehaviour
         {
             Grenade.AddForce(Camera.transform.forward * ThrowStrength, ForceMode.Impulse);
         }
+        inventoryManager.RemoveCurrentEquippedGrenade();
         StartCoroutine(ExplodeGrenade());
     }
 
@@ -145,6 +149,7 @@ public class GrenadeThrower : MonoBehaviour
 
         //Instantiate(ExplosionParticleSystem, Grenade.transform.position, Quaternion.identity);
         mainController.GetCurrentGrenade().Explode();
+        mainController.HideGrenade();
         Grenade.GetComponent<Cinemachine.CinemachineImpulseSource>().GenerateImpulse(new Vector3(Random.Range(-1, 1), Random.Range(0.5f, 1), Random.Range(-1, 1)));
 
         Grenade.freezeRotation = true;

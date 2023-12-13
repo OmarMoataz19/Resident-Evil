@@ -10,14 +10,6 @@ public class Inventory : MonoBehaviour
     public GameObject inventory;
     public bool inventoryActive = false;
 
-
-    // array of weapons currently with leon
-    // array of keys currently with leon
-    // each weapon will be a class with an ammo attribute..
-    // key will be an enum with a name attribute
-    // array of herbs, each herb could be an enum
-
-    // grenades will be an enum with a name attribute
     void Start()
     {
         
