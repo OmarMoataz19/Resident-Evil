@@ -18,3 +18,4 @@ MonoBehaviour:
   ItemType: 0
   WeaponType: 2
   Ammo: 30
+  AmmoType: 2

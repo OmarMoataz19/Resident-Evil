@@ -157,14 +157,14 @@ public class LeonAnimationController : MonoBehaviour
     }
 
     public void dealDamage(int x){
-        if(x>=LeonHP){
+        if(x>=mainController.GetHp()){
             LeonHP = 0;
             mainController.SetHp(LeonHP);
             LeonAnimator.SetTrigger("Death");
             stopMovment();
         }
         else{
-            LeonHP -= x;
+            LeonHP = mainController.GetHp() - x;
             mainController.SetHp(LeonHP);
         }
         isInvincible = true;

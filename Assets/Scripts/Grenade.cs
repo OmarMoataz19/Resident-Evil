@@ -15,6 +15,7 @@ public abstract class Grenade : MonoBehaviour
     float countDownGrenade;
     bool hasExploded;
     bool thrown;
+    public int equipIndex = -1;
 
     // Start is called before the first frame update
     void Start()

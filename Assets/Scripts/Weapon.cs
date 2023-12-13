@@ -36,11 +36,17 @@ public abstract class Weapon : MonoBehaviour
     protected float reloadTime;
     protected int magazineSize;
     protected int bulletsLeft;
+    protected int totalAmmo;
+    protected int price; //todo
     protected FiringMode firingMode;
 
     //control variables
     protected bool isReloading ;
     protected bool isReadyToShoot = true;
+
+    //References
+    public InventoryManager inventoryManager;
+    public Animator leonAnimator;
     public virtual void Shoot()
     {
         //isReadyToShoot = true;
@@ -59,7 +65,16 @@ public abstract class Weapon : MonoBehaviour
 
             Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
             bulletsLeft--;
+            inventoryManager.ShootWeapon();
             UpdateHUD();
+            if(bulletsLeft == 0 )
+            {
+                bool output= Reload();
+                if(output)
+                {
+                    leonAnimator.SetTrigger("PerformReload");
+                }
+            }
             Invoke(nameof(ResetShot), timeBetweenShooting);
         }
     }
@@ -76,7 +91,6 @@ public abstract class Weapon : MonoBehaviour
     }
     private void ReloadFinished()
     {
-        bulletsLeft = magazineSize;
         UpdateHUD();
         isReloading = false;
     }
@@ -85,16 +99,22 @@ public abstract class Weapon : MonoBehaviour
         // Apply damage to hit object, if it's a zombie
     }
 
-    public virtual void Reload()
+    public virtual bool Reload()
     {
         if (bulletsLeft == magazineSize || isReloading)
         {
-            return;
+            return false;
         }
-        //todo: check if there is enough ammo from inventory..
+        bool output = inventoryManager.ReloadWeapon(magazineSize - bulletsLeft);
+        if (!output)
+        {
+            return false;
+        }
+
         isReloading = true;
         animator.SetTrigger("Reload");
         Invoke(nameof(ReloadFinished), reloadTime);
+        return true;
     }
     protected bool IsTargetInRange(RaycastHit hit)
     {
@@ -213,5 +233,15 @@ public abstract class Weapon : MonoBehaviour
     public int GetMagazineSize()
     {
         return magazineSize;
+    }
+    public void SetTotalAmmo(int totalAmmo)
+    {
+        //the value that comes from the inventory
+        this.totalAmmo = totalAmmo;
+    }
+    public void SetBulletsLeft(int bulletsLeftNow)
+    {
+        //the value that comes from the inventory
+        bulletsLeft = bulletsLeftNow;
     }
 }

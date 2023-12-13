@@ -41,29 +41,42 @@ public class ThirdPersonShootingController : MonoBehaviour
 
     void Update()
     {
-        HandleAiming(starterAssetsInputs.aim);
+        if(!mainController.inventory.inventoryActive)
+        {
+            HandleAiming(starterAssetsInputs.aim);
 
-        if (starterAssetsInputs.aim)
-        {
-            HandleShooting();   
-        }
-       // Update the auto fire timer: check this
-        if (autoFireTimer > 0)
-        {
-            autoFireTimer -= Time.deltaTime;
-        }
+            if (starterAssetsInputs.aim)
+            {
+                HandleShooting();   
+            }
+        // Update the auto fire timer: check this
+            if (autoFireTimer > 0)
+            {
+                autoFireTimer -= Time.deltaTime;
+            }
 
-        if(mainController.GetCurrentWeapon().name == "pistol" || mainController.GetCurrentWeapon().name == "revolver")
-        {
-            currentLayerIndex = 6;
-            animator.SetLayerWeight(7, Mathf.Lerp(animator.GetLayerWeight(7), 0f, Time.deltaTime * 10f));
+            if(mainController.GetCurrentWeapon().name == "pistol" || mainController.GetCurrentWeapon().name == "revolver")
+            {
+                currentLayerIndex = 6;
+                animator.SetLayerWeight(7, Mathf.Lerp(animator.GetLayerWeight(7), 0f, Time.deltaTime * 10f));
+            }
+            else //todo :check if the user can have no weapon equipped..
+            {
+                currentLayerIndex = 7;
+                animator.SetLayerWeight(currentLayerIndex, Mathf.Lerp(animator.GetLayerWeight(currentLayerIndex), 1f, Time.deltaTime * 10f));
+            }
+            HandleReload();
         }
-        else //todo :check if the user can have no weapon equipped..
+        else
         {
-            currentLayerIndex = 7;
-            animator.SetLayerWeight(currentLayerIndex, Mathf.Lerp(animator.GetLayerWeight(currentLayerIndex), 1f, Time.deltaTime * 10f));
+            starterAssetsInputs.aim = false;
+            starterAssetsInputs.shoot = false;
+            starterAssetsInputs.reload = false;
+            starterAssetsInputs.sprint = false;
+            starterAssetsInputs.jump = false;
+            
         }
-        HandleReload();
+        
     }
 
     private void HandleAiming(bool isAiming)
@@ -189,7 +202,7 @@ public class ThirdPersonShootingController : MonoBehaviour
             }
         }
     }
-    private void HandleReload()
+    public void HandleReload()
     {
         Weapon currentWeapon = mainController.GetCurrentWeapon();
         if (currentWeapon != null)
@@ -198,17 +211,19 @@ public class ThirdPersonShootingController : MonoBehaviour
             {
                 if(mainController.GetCurrentWeapon().GetIsReloading() == false && mainController.GetCurrentWeapon().GetBulletsLeft() != mainController.GetCurrentWeapon().GetMagazineSize())
                 {   
-                    currentWeapon.Reload();
+                    bool output = currentWeapon.Reload();
                     animator.SetBool("AimRifle",false);
                     animator.SetBool("Aim",false);
                     starterAssetsInputs.aim = false;
                     if ((mainController.GetCurrentWeapon().name == "pistol" || mainController.GetCurrentWeapon().name == "revolver") && mainController.GetCurrentWeapon().GetIsReloading() == true) 
                     {
                         animator.SetLayerWeight(8,1f);
-                    }                    
+                    }             
+                    if (output)
+                    {
                     animator.SetTrigger("PerformReload");
-
                     starterAssetsInputs.reload = false;
+                    }
                 }
             }
         }

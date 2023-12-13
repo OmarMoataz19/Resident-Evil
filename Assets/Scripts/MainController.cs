@@ -1,48 +1,77 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class MainController : MonoBehaviour
 {
     private int hp;
     private int gold;
     public HealthController  healthController;
-    //knife durability..
-    // inventory
-
-    [SerializeField] private Weapon startingWeapon;
     private Weapon currentWeapon;
+    public Weapon[] weapons;
+    public GameObject[] weaponObjects;
     public Grenade currentGrenade;
+    public Grenade[] grenades;
+    public GameObject[] grenadeObjects;
+    private int knifeDurability;
+    public TextMeshProUGUI goldText;
+    public TextMeshProUGUI hpText;
+    public TextMeshProUGUI knifeDurabilityText;
+    public Inventory inventory;
     void Start()
     {
         hp = 8;
-        EquipWeapon(startingWeapon);
+        gold = 30;
+        knifeDurability = 10;
     }
     void Update()
     {
-        //to be removed 
-        //if key is pressed is 1 increase hp by 1 
-        // if(Input.GetKeyDown(KeyCode.Alpha1))
-        // {
-        //     healthController.SetHp(hp + 1);
-        //     hp++;
-        // }
-        // if (Input.GetKeyDown(KeyCode.Alpha2))
-        // {
-        //     healthController.SetHp(hp - 1);
-        //     hp --;
-
-        // }
+        goldText.text = gold + "";
+        hpText.text = hp + "";
     }
-    public void EquipWeapon(Weapon weapon)
+    public void EquipWeapon(WeaponItem WeaponItem)
     {
-        if (currentWeapon != null)
+        foreach (var weapon in weapons)
         {
-            // todo: Handle unequipping the current weapon 
+            if (WeaponItem.itemName == "Pistol")
+            {
+                currentWeapon = weapons[0];
+                weaponObjects[0].SetActive(true);
+                weaponObjects[1].SetActive(false);
+                weaponObjects[2].SetActive(false);
+                weaponObjects[3].SetActive(false);
+                break;
+            }
+            else if (WeaponItem.itemName == "AK-14")
+            {
+                currentWeapon = weapons[1];
+                weaponObjects[0].SetActive(false);
+                weaponObjects[1].SetActive(true);
+                weaponObjects[2].SetActive(false);
+                weaponObjects[3].SetActive(false);
+                break;
+            }
+            else if (WeaponItem.itemName == "Revolver")
+            {
+                currentWeapon = weapons[2];
+                weaponObjects[0].SetActive(false);
+                weaponObjects[1].SetActive(false);
+                weaponObjects[2].SetActive(true);
+                weaponObjects[3].SetActive(false);
+                break;
+            }
+            else if (WeaponItem.itemName == "ShotGun")
+            {
+                currentWeapon = weapons[3];
+                weaponObjects[0].SetActive(false);
+                weaponObjects[1].SetActive(false);
+                weaponObjects[2].SetActive(false);
+                weaponObjects[3].SetActive(true);
+                break;
+            }
         }
-
-        currentWeapon = weapon;
-        // todo: Handle equipping the new weapon (e.g., updating UI, setting weapon visible, etc.)
+        currentWeapon.SetBulletsLeft(WeaponItem.Ammo); //bullets left
     }
 
     public Weapon GetCurrentWeapon()
@@ -51,20 +80,80 @@ public class MainController : MonoBehaviour
     }
     public void SetHp(int newHp)
     {
-            healthController.SetHp(newHp);
-            hp = newHp;
+        healthController.SetHp(newHp);
+        hp = newHp;
     }
 
     public Grenade GetCurrentGrenade()
     {
         return currentGrenade;
     }
-    //equip grenade
-    public void EquipGrenade(Grenade grenade)
+    public void EquipGrenade(GrenadeItem grenadeItem , int index)
     {
-        if (currentGrenade != null)
+        foreach (var grenade in grenades)
         {
-            //todo: Handle equipping the current grenade
+            if (grenadeItem.itemName == "Hand Grenade")
+            {
+                currentGrenade = grenades[0];
+                grenadeObjects[0].SetActive(true);
+                grenadeObjects[1].SetActive(false);
+                currentGrenade.equipIndex = index;
+                break;
+            }
+            else if (grenadeItem.itemName == "Flash Grenade")
+            {
+                currentGrenade = grenades[1];
+                grenadeObjects[0].SetActive(false);
+                grenadeObjects[1].SetActive(true);
+                currentGrenade.equipIndex = index;
+                break;
+            }
+           
+        } 
+    }
+    public void HideGrenade()
+    {
+        grenadeObjects[0].SetActive(false);
+        grenadeObjects[1].SetActive(false);
+        currentGrenade = null;
+    }
+    public void HideWeapons()
+    {
+        weaponObjects[0].SetActive(false);
+        weaponObjects[1].SetActive(false);
+        weaponObjects[2].SetActive(false);
+        weaponObjects[3].SetActive(false);
+    }
+    public void ShowWeapon()
+    {
+        if(currentWeapon == weapons[0])
+        {
+            weaponObjects[0].SetActive(true);
         }
+        else if(currentWeapon == weapons[1])
+        {
+            weaponObjects[1].SetActive(true);
+        }
+        else if(currentWeapon == weapons[2])
+        {
+            weaponObjects[2].SetActive(true);
+        }
+        else if(currentWeapon == weapons[3])
+        {
+            weaponObjects[3].SetActive(true);
+        }
+    }
+    public int GetCurrentDurability()
+    {
+        return knifeDurability;
+    }
+    public void SetKnifeDurability (int value)
+    {
+        knifeDurability = value;
+        knifeDurabilityText.text = value + "/10";
+    }
+    public int GetHp()
+    {
+        return hp;
     }
 }

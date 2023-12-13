@@ -35,7 +35,7 @@ public class InventoryManager : MonoBehaviour
 
     // Crafting variables.
     private bool isCraftModeOn = false;
-    private InventoryItem firstIngredient = null;
+    private int firstIngredient = -1;
     public List<Sprite> craftedSprites = new List<Sprite>();
 
     private void Awake()
@@ -48,6 +48,7 @@ public class InventoryManager : MonoBehaviour
         pistol.icon = craftedSprites[5];
         pistol.WeaponType = WeaponType.Pistol;
         pistol.Ammo = 12;
+        pistol.AmmoType = AmmoType.Pistol;
 
         AmmoItem pistolAmmo = ScriptableObject.CreateInstance<AmmoItem>();
         pistolAmmo.id = 15;
@@ -74,31 +75,29 @@ public class InventoryManager : MonoBehaviour
 
     public void SelectItem(string itemIndex)
     {
-
         int index;
         if (int.TryParse(itemIndex, out index))
         {
-            Debug.Log(index);
             selectedItemIndex = index;
             InventoryItem selectedItem = Items[selectedItemIndex];
             if (isCraftModeOn)
             {
-                if(selectedItemIndex == Items.IndexOf(firstIngredient))
+                if(selectedItemIndex == firstIngredient)
                 {
                     // TODO: SHOW NOT ALLOWED
                     Debug.Log("Can't craft with the same item");
                     return;
                 }
-                if (firstIngredient is HerbItem)
+                if (Items[firstIngredient] is HerbItem)
                 {
                     // check second is the same..
                     if(selectedItem is HerbItem)
                     {
-                        var result = CraftPotion((firstIngredient as HerbItem),
+                        var result = CraftPotion((Items[firstIngredient] as HerbItem),
                                                     (selectedItem as HerbItem));
                         if(result != null)
                         {
-                            Items.Remove(firstIngredient);
+                            Items.Remove(Items[firstIngredient]);
                             Items.Remove(selectedItem);
                             Items.Add(result);
                         }
@@ -108,14 +107,14 @@ public class InventoryManager : MonoBehaviour
                         // TODO: Indicate that this is invalid operation.
                     }
                 }
-                else if (firstIngredient is GunPowderItem)
+                else if (Items[firstIngredient] is GunPowderItem)
                 {
                     // check second is the same..
                     if(selectedItem is GunPowderItem)
                     {
-                        var result = CraftAmmo((firstIngredient as GunPowderItem), 
+                        var result = CraftAmmo((Items[firstIngredient] as GunPowderItem), 
                                                 (selectedItem as GunPowderItem));
-                        Items.Remove(firstIngredient);
+                        Items.Remove(Items[firstIngredient]);
                         Items.Remove(selectedItem);
                         // check If you already have ammo and increment..
                         if (!AddAmmoToInventory(result))
@@ -274,7 +273,7 @@ public class InventoryManager : MonoBehaviour
         Items.RemoveAt(selectedItemIndex);
         ListItems();
         selectedItemIndex = -1;
-        DiscardButton.SetActive(false);
+        DisableButtons();
     }
 
     public void ListItems()
@@ -352,9 +351,17 @@ public class InventoryManager : MonoBehaviour
             buttonsToDraw.Add(CraftButton);
         }
 
-        if (!isCraftModeOn && (item is WeaponItem && !(item as WeaponItem).Equals(equippedWeapon)))
+        if (!isCraftModeOn && !(item is WeaponItem) && !(item is KeyItem))
         {
             buttonsToDraw.Add(DiscardButton);
+        }
+        if(equippedPanelController.mainController.GetCurrentGrenade() != null)
+        {
+            if(item is GrenadeItem && (selectedItemIndex == equippedPanelController.mainController.GetCurrentGrenade().equipIndex))
+            {
+                buttonsToDraw.Remove(EquipButton);
+                buttonsToDraw.Remove(DiscardButton);
+            }
         }
         
         foreach (var btn in buttonsToDraw)
@@ -383,7 +390,8 @@ public class InventoryManager : MonoBehaviour
 
         if(item is GrenadeItem)
         {
-            equippedPanelController.EquipGrenade((item as GrenadeItem));
+            equippedPanelController.EquipGrenade((item as GrenadeItem) , selectedItemIndex);
+            DisableButtons();
             return;
         }
     }
@@ -392,27 +400,26 @@ public class InventoryManager : MonoBehaviour
     {
         if(selectedItemIndex == -1) return;
 
-        // TODO: Implement the logic
         InventoryItem selectedItem = Items[selectedItemIndex];
 
-        Debug.Log(selectedItem.GetType());
         if(selectedItem is HerbItem)
         {
-            Debug.Log("Green herb here");
-            Debug.Log((selectedItem as HerbItem).HerbType);
             if ( (selectedItem as HerbItem).HerbType == HerbType.Green)
             {
-                Debug.Log("Using Green herb");
+                int temp = Math.Min(8, equippedPanelController.mainController.GetHp() + 2);
+                equippedPanelController.mainController.SetHp(temp);
             }
         }
         else if (selectedItem is MixtureItem)
         {
             if( (selectedItem as MixtureItem).MixtureType == MixtureType.GreenGreen )
             {
-                Debug.Log("Using Green potion");
+                int temp = Math.Min(8, equippedPanelController.mainController.GetHp() + 6);
+                equippedPanelController.mainController.SetHp(temp);
+
             } else if ( (selectedItem as MixtureItem).MixtureType == MixtureType.GreenRed )
             {
-                Debug.Log("Using GreenRed potion");
+                equippedPanelController.mainController.SetHp(8);
             }
         }
 
@@ -425,8 +432,10 @@ public class InventoryManager : MonoBehaviour
 
     public void OnCraftClicked()
     {
+        print("inOnCraft: ");
+        print(selectedItemIndex);
         isCraftModeOn = true;
-        firstIngredient = Items[selectedItemIndex];
+        firstIngredient = selectedItemIndex;
         selectedItemIndex = -1;
         DisableButtons();
     }
@@ -461,6 +470,49 @@ public class InventoryManager : MonoBehaviour
     private bool IsCraftable(InventoryItem item)
     {
         return (item is HerbItem) || (item is GunPowderItem);
+    }
+
+    //momtaz & King hooka addition
+    public bool ReloadWeapon(int ammoNeeded)
+    {
+        foreach(var item in Items)
+        {
+            if(item is AmmoItem && (item as AmmoItem).AmmoType == (equippedWeapon as WeaponItem).AmmoType)
+            {
+                int ammoToAdd = Math.Min(ammoNeeded, (item as AmmoItem).Amount);
+
+                //add ammo to the weapon
+                int weaponIndex = Items.IndexOf(equippedWeapon);
+                (Items[weaponIndex] as WeaponItem).Ammo += ammoToAdd;
+                equippedPanelController.EquipWeapon(Items[weaponIndex] as WeaponItem);
+                equippedWeapon = Items[weaponIndex];
+
+                //remove ammo from the inventory
+                (item as AmmoItem).Amount -= ammoToAdd;
+                if((item as AmmoItem).Amount == 0 )
+                {
+                    Items.Remove(item);
+                }
+                equippedPanelController.mainController.GetCurrentWeapon().SetBulletsLeft((equippedWeapon as WeaponItem).Ammo);
+                return true;
+            }
+        }
+        return false;
+
+    }
+    public void ShootWeapon()
+    {
+        int weaponIndex = Items.IndexOf(equippedWeapon);
+        (Items[weaponIndex] as WeaponItem).Ammo --;
+        equippedPanelController.EquipWeapon(Items[weaponIndex] as WeaponItem);
+        equippedWeapon = Items[weaponIndex];
+    }
+
+    public void RemoveCurrentEquippedGrenade ()
+    {
+        Items.RemoveAt(equippedPanelController.mainController.GetCurrentGrenade().equipIndex);
+        equippedPanelController.RemoveGrenade();
+        //equippedPanelController.mainController.HideGrenade();
     }
 
 }
