@@ -16,5 +16,5 @@ public class WeaponItem : InventoryItem
     public WeaponType WeaponType;
     public int Ammo;
     public AmmoType AmmoType;
-    
+
 }

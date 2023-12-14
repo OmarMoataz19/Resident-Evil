@@ -9,6 +9,7 @@ public class Inventory : MonoBehaviour
     public InventoryManager invManager;
     public GameObject inventory;
     public bool inventoryActive = false;
+    public GameObject HealthPanel;
     void Start()
     {
         
@@ -19,13 +20,22 @@ public class Inventory : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab) && !invManager.shopOpened )
         {
-            inventoryActive = !inventoryActive;
+            inventoryActive = true;
 
             inventory.SetActive(inventoryActive);
+            HealthPanel.SetActive(true);
 
             invManager.ResetInventoryFlags();
             invManager.ListItems();
             
+            Cursor.lockState = inventoryActive ? CursorLockMode.None : CursorLockMode.Locked;
+            Time.timeScale = inventoryActive ? 0 : 1;
+        }
+        if (Input.GetKeyDown(KeyCode.Escape) && inventoryActive)
+        {
+            inventoryActive = false;
+            HealthPanel.SetActive(false);
+            inventory.SetActive(inventoryActive);
             Cursor.lockState = inventoryActive ? CursorLockMode.None : CursorLockMode.Locked;
             Time.timeScale = inventoryActive ? 0 : 1;
         }

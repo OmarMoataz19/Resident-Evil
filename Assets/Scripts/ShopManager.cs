@@ -7,11 +7,7 @@ using TMPro;
 public class ShopManager : MonoBehaviour
 {
     public InventoryManager inventoryManager;
-    //public InventoryItem purchasedItem;
-
-
-    public int gold;
-    public TMP_Text goldUI;
+    //public InventoryItem purchasedItem;    
     public InventoryItem[] shopItemsSO;
     public GameObject[] shopPanelsGO;
     public ShopTemplate[] shopPanels;
@@ -30,25 +26,20 @@ public class ShopManager : MonoBehaviour
     public GameObject tabStorage;
     public GameObject tabKnifeRepair;
 
-    public int knifeDurability;
     public Button knifeRepair;
     public TextMeshProUGUI durabilityTxt;
 
     public bool GGMixFlag = false;
     public bool GRMixFlag = false;
 
+    public MainController mainController;
 
     public List<Sprite> shopSprites = new List<Sprite>();
-
-
-
-
 
     // Start is called before the first frame update
     void Start()
     {
         ShowBuyableItems();
-        goldUI.text = "Gold: " + gold.ToString();
         LoadPanels();
         CheckPurchasable();
         CheckSellable();
@@ -62,7 +53,7 @@ public class ShopManager : MonoBehaviour
         SetBuySellBtnColor();
         CheckMixtures();
 
-        if (gold >= 100 && knifeDurability<10)
+        if (mainController.GetGold() >= 100 && mainController.GetCurrentDurability()<10)
         {
             knifeRepair.interactable = true;
         }
@@ -99,8 +90,7 @@ public class ShopManager : MonoBehaviour
 
     public void AddGold()
     {
-        gold += 200;
-        goldUI.text = "Gold: " + gold.ToString();
+        mainController.SetGold(mainController.GetGold() + 200);
         CheckPurchasable();
     }
 
@@ -108,7 +98,7 @@ public class ShopManager : MonoBehaviour
     {
         for (int i = 0; i < shopItemsSO.Length; i++)
         {
-            if (gold >= shopItemsSO[i].baseCost && shopItemsSO[i].baseCost != 0)
+            if (mainController.GetGold() >= shopItemsSO[i].baseCost && shopItemsSO[i].baseCost != 0)
                 myPurchaseBtns[i].interactable = true;
             else
                 myPurchaseBtns[i].interactable = false;
@@ -123,7 +113,7 @@ public class ShopManager : MonoBehaviour
 
     public void PurchaseItem(int btnNo)
     {
-        if (gold >= shopItemsSO[btnNo].baseCost)
+        if (mainController.GetGold() >= shopItemsSO[btnNo].baseCost)
         {
 
             if (shopItemsSO[btnNo].ItemType == InventoryItemType.Grenade)
@@ -145,8 +135,7 @@ public class ShopManager : MonoBehaviour
                 var inventoryCheck = inventoryManager.Add(grenades);
                 if (inventoryCheck)
                 {
-                    gold = gold - shopItemsSO[btnNo].baseCost;
-                    goldUI.text = "Gold: " + gold.ToString();
+                   mainController.SetGold(mainController.GetGold()-shopItemsSO[btnNo].baseCost);
                 }
                 else
                 {
@@ -174,8 +163,7 @@ public class ShopManager : MonoBehaviour
                 var inventoryCheck = inventoryManager.Add(gunPowders);
                 if (inventoryCheck)
                 {
-                    gold = gold - shopItemsSO[btnNo].baseCost;
-                    goldUI.text = "Gold: " + gold.ToString();
+                   mainController.SetGold(mainController.GetGold() - shopItemsSO[btnNo].baseCost);
                 }
                 else
                 {
@@ -202,8 +190,7 @@ public class ShopManager : MonoBehaviour
                 var inventoryCheck = inventoryManager.Add(herbs);
                 if (inventoryCheck)
                 {
-                    gold = gold - shopItemsSO[btnNo].baseCost;
-                    goldUI.text = "Gold: " + gold.ToString();
+                    mainController.SetGold(mainController.GetGold() - shopItemsSO[btnNo].baseCost);
                 }
                 else
                 {
@@ -234,8 +221,7 @@ public class ShopManager : MonoBehaviour
                 var inventoryCheck = inventoryManager.Add(weapons);
                 if (inventoryCheck)
                 {
-                    gold = gold - shopItemsSO[btnNo].baseCost;
-                    goldUI.text = "Gold: " + gold.ToString();
+                    mainController.SetGold(mainController.GetGold() - shopItemsSO[btnNo].baseCost);
                 }
                 else
                 {
@@ -276,8 +262,7 @@ public class ShopManager : MonoBehaviour
                 var inventoryCheck = inventoryManager.AddAmmoToInventory(ammos);
                 if (inventoryCheck)
                 {
-                    gold = gold - shopItemsSO[btnNo].baseCost;
-                    goldUI.text = "Gold: " + gold.ToString();
+                    mainController.SetGold(mainController.GetGold() - shopItemsSO[btnNo].baseCost);
                 }
                 else
                 {
@@ -286,7 +271,6 @@ public class ShopManager : MonoBehaviour
 
             }
 
-            goldUI.text = "Gold: " + gold.ToString();
             CheckPurchasable();
         }
 
@@ -294,6 +278,10 @@ public class ShopManager : MonoBehaviour
 
     public void CheckSellable()
     {
+        for (int i = 0; i < shopItemsSO.Length; i++)
+        {
+            mySellBtns[i].interactable = false;
+        }
         foreach (var item in inventoryManager.Items)
         {
             for (int i = 0; i < shopItemsSO.Length; i++)
@@ -307,6 +295,7 @@ public class ShopManager : MonoBehaviour
                 }
             }
         }
+        
 
     }
 
@@ -317,8 +306,7 @@ public class ShopManager : MonoBehaviour
             mySellBtns[i].interactable = false;
         }
         Debug.Log("Sell Pressed");
-        gold = gold + shopItemsSO[btnNo].sellPrice;
-        goldUI.text = "Gold: " + gold.ToString();
+        mainController.SetGold(mainController.GetGold() + shopItemsSO[btnNo].sellPrice);
         inventoryManager.Sell(shopItemsSO[btnNo].id);
     } 
 
@@ -555,7 +543,7 @@ public class ShopManager : MonoBehaviour
     {
 
         HideAllTabsAndPanels();
-        durabilityTxt.text = "Durability: " + knifeDurability.ToString();
+        durabilityTxt.text = "Durability: " + mainController.GetCurrentDurability().ToString();
         //shopPanelsGO[17].SetActive(true);
         SetTabColor(tabKnifeRepair, true);
         SetTabColor(tabStorage, false);
@@ -580,10 +568,9 @@ public class ShopManager : MonoBehaviour
 
     public void Repair()
     { 
-            knifeDurability = 10;
-            gold = gold - 100;
-            goldUI.text = "Gold: " + gold.ToString();
-            durabilityTxt.text = "Durability: " + knifeDurability.ToString();     
+            mainController.SetKnifeDurability(10);
+            mainController.SetGold(mainController.GetGold() - 100);
+            durabilityTxt.text = "Durability: " + mainController.GetCurrentDurability().ToString();     
     }
 
         public void HideAllTabsAndPanels()

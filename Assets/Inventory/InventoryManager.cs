@@ -27,12 +27,13 @@ public class InventoryManager : MonoBehaviour
 
 
     // Inventory control flags.
-    private int selectedItemIndex = -1;
+    public int selectedItemIndex = -1;
     public bool ShowStorage = false;
 
 
     // Equipped variables.
     private InventoryItem equippedWeapon = null;
+    private InventoryItem equippedGrenade = null;
 
 
     // Crafting variables.
@@ -104,6 +105,7 @@ public class InventoryManager : MonoBehaviour
                     Debug.Log("Can't craft with the same item");
                     return;
                 }
+                updateCurrentEquipIndex(1, selectedItemIndex, firstIngredient);
                 if (Items[firstIngredient] is HerbItem)
                 {
                     // check second is the same..
@@ -161,14 +163,26 @@ public class InventoryManager : MonoBehaviour
                         if (selectedItem is AmmoItem)
                         {
                             AddAmmoToStorage((selectedItem as AmmoItem));
+                            Items.Remove(selectedItem);
                         }
-                        else
+                       else if(selectedItem != equippedWeapon)
                         {
+                            if(equippedPanelController.mainController.GetCurrentGrenade() != null)
+                            {
+                                if ((selectedItem is GrenadeItem && (selectedItemIndex == equippedPanelController.mainController.GetCurrentGrenade().equipIndex)))
+                                {
+                                    equippedPanelController.mainController.HideGrenade();
+                                    equippedPanelController.RemoveGrenade();
+                                }
+                            }
                             StorageItems.Add(selectedItem);
+                            Items.Remove(selectedItem);
                         }
-                        Items.Remove(selectedItem);
+                        updateCurrentEquipIndex(0, selectedItemIndex, -1);
                         ListStorageItems();
                         ListItems();
+                        DisableButtons();
+                        
                     }
                     else
                     {
@@ -203,6 +217,7 @@ public class InventoryManager : MonoBehaviour
                             Debug.Log("Inventory full");
                         }
                     }
+                        ListItems();
                         ListStorageItems();
                 }
             }
@@ -364,7 +379,15 @@ public class InventoryManager : MonoBehaviour
     public void Remove()
     {
         if (selectedItemIndex == -1) return;
-
+        updateCurrentEquipIndex(0, selectedItemIndex, -1);
+        if(equippedPanelController.mainController.GetCurrentGrenade() != null )
+                {
+                    if(selectedItemIndex == equippedPanelController.mainController.GetCurrentGrenade().equipIndex)
+                    {
+                        equippedPanelController.mainController.HideGrenade();
+                        equippedPanelController.RemoveGrenade();
+                    }
+                }
         Items.RemoveAt(selectedItemIndex);
         ListItems();
         selectedItemIndex = -1;
@@ -372,14 +395,26 @@ public class InventoryManager : MonoBehaviour
     }
     public void Sell(int id)
     {
+        int counter = 0;
         foreach(var item in Items)
         {
-            if (id == item.id)
+            if (id == item.id) 
             {
+                if(equippedPanelController.mainController.GetCurrentGrenade() != null )
+                {
+                    if(counter == equippedPanelController.mainController.GetCurrentGrenade().equipIndex)
+                    {
+                        equippedPanelController.mainController.HideGrenade();
+                        equippedPanelController.RemoveGrenade();
+                    }
+                }
+                updateCurrentEquipIndex(0, counter, -1);
+
                 Items.Remove(item);
                 ListItems();
                 break;
             }
+            counter ++;
         }
     }
     public void ListStorageItems()
@@ -506,7 +541,6 @@ public class InventoryManager : MonoBehaviour
             if(item is GrenadeItem && (selectedItemIndex == equippedPanelController.mainController.GetCurrentGrenade().equipIndex))
             {
                 buttonsToDraw.Remove(EquipButton);
-                buttonsToDraw.Remove(DiscardButton);
             }
         }
         
@@ -537,6 +571,7 @@ public class InventoryManager : MonoBehaviour
         if(item is GrenadeItem)
         {
             equippedPanelController.EquipGrenade((item as GrenadeItem) , selectedItemIndex);
+            equippedGrenade = item;
             DisableButtons();
             return;
         }
@@ -547,7 +582,7 @@ public class InventoryManager : MonoBehaviour
         if(selectedItemIndex == -1) return;
 
         InventoryItem selectedItem = Items[selectedItemIndex];
-
+        updateCurrentEquipIndex(0, selectedItemIndex, -1);
         if(selectedItem is HerbItem)
         {
             if ( (selectedItem as HerbItem).HerbType == HerbType.Green)
@@ -659,6 +694,31 @@ public class InventoryManager : MonoBehaviour
         Items.RemoveAt(equippedPanelController.mainController.GetCurrentGrenade().equipIndex);
         equippedPanelController.RemoveGrenade();
         //equippedPanelController.mainController.HideGrenade();
+    }
+    public void updateCurrentEquipIndex (int method, int index , int index2 )
+    {
+        if(equippedPanelController.mainController.GetCurrentGrenade() != null)
+        {
+            if (method == 0)
+        {
+            if(equippedPanelController.mainController.GetCurrentGrenade().equipIndex > index  )
+            {
+                equippedPanelController.mainController.GetCurrentGrenade().equipIndex --;
+            }
+        }
+        else
+        {
+            if (equippedPanelController.mainController.GetCurrentGrenade().equipIndex > index && equippedPanelController.mainController.GetCurrentGrenade().equipIndex > index2)
+            {
+                equippedPanelController.mainController.GetCurrentGrenade().equipIndex-=2;
+            }
+            else if (equippedPanelController.mainController.GetCurrentGrenade().equipIndex > index || equippedPanelController.mainController.GetCurrentGrenade().equipIndex > index2)
+            {
+                equippedPanelController.mainController.GetCurrentGrenade().equipIndex--;
+            }
+        }
+        }
+       
     }
 
 }

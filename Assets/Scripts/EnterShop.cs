@@ -11,6 +11,9 @@ public class EnterShop : MonoBehaviour
     public GameObject Inventory;
     public InventoryManager invManager;
     public bool shopActive = false;
+    public Inventory inventory;
+    public GameObject HealthPanel;
+    public ShopManager shopManager;
     void Start()
     {
         
@@ -24,9 +27,12 @@ public class EnterShop : MonoBehaviour
                 Inventory.SetActive(false);
                 invManager.shopOpened = false;
                 shopActive = false;
+                invManager.ShowStorage = false;
+                HealthPanel.SetActive(false);
+                RefreshShop();
             }
-            Cursor.lockState = shopActive ? CursorLockMode.None : CursorLockMode.Locked;
-            Time.timeScale = shopActive ? 0 : 1;
+            Cursor.lockState = shopActive || inventory.inventoryActive ? CursorLockMode.None : CursorLockMode.Locked;
+            Time.timeScale = shopActive || inventory.inventoryActive ? 0 : 1;
     }
     private void OnTriggerStay(Collider other)
     {
@@ -42,6 +48,7 @@ public class EnterShop : MonoBehaviour
                 invManager.ListItems();
                 invManager.shopOpened = true;
                 shopActive = true;
+                HealthPanel.SetActive(true);
             }
   
         }
@@ -53,5 +60,13 @@ public class EnterShop : MonoBehaviour
         {
             textMeshProUGUI.text = "";
         }
+    }
+    public void RefreshShop()
+    {
+        shopManager.HideAllTabsAndPanels();
+        shopManager.ShowBuyableItems();
+        shopManager.LoadPanels();
+        shopManager.CheckPurchasable();
+        shopManager.CheckSellable();
     }
 }

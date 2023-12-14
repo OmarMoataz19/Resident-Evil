@@ -13,4 +13,5 @@ public enum GrenadeType
 public class GrenadeItem : InventoryItem
 {
     public GrenadeType GrenadeType;
+
 }

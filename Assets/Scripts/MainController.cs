@@ -17,6 +17,8 @@ public class MainController : MonoBehaviour
     private int knifeDurability;
     public TextMeshProUGUI goldText;
     public TextMeshProUGUI hpText;
+    public TextMeshProUGUI gold2Text;
+    public TextMeshProUGUI hp2Text;
     public TextMeshProUGUI knifeDurabilityText;
     public Inventory inventory;
     void Start()
@@ -29,6 +31,8 @@ public class MainController : MonoBehaviour
     {
         goldText.text = gold + "";
         hpText.text = hp + "";
+        gold2Text.text = gold + "";
+        hp2Text.text = hp + "";
     }
     public void EquipWeapon(WeaponItem WeaponItem)
     {
@@ -155,5 +159,13 @@ public class MainController : MonoBehaviour
     public int GetHp()
     {
         return hp;
+    }
+    public int GetGold()
+    {
+        return gold;
+    }
+    public void SetGold (int gold)
+    {
+        this.gold = gold;
     }
 }
