@@ -16,5 +16,7 @@ MonoBehaviour:
   itemName: Shotgun Ammo
   icon: {fileID: 21300000, guid: 5c93e5544d3f4ce4e85778e2dd407b7d, type: 3}
   ItemType: 1
+  baseCost: 40
+  sellPrice: 0
   AmmoType: 3
   Amount: 6

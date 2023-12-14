@@ -144,6 +144,7 @@ public class ThirdPersonShootingController : MonoBehaviour
             {
                 animator.SetBool("AimRifle", false);
             }
+            starterAssetsInputs.shoot = false;
         }
     }
 

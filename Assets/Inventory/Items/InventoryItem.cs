@@ -23,4 +23,6 @@ public class InventoryItem : ScriptableObject
     public string itemName;
     public Sprite icon;
     public InventoryItemType ItemType;
+    public int baseCost;
+    public int sellPrice;
 }

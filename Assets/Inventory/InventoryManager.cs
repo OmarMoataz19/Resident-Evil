@@ -12,8 +12,9 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
     public List<InventoryItem> Items = new List<InventoryItem>();
-
+    public List<InventoryItem> StorageItems = new List<InventoryItem>();
     public Transform ItemContent;
+    public Transform StorageContent;
     public GameObject InventoryItem;
 
     public EquippedPanelController equippedPanelController;
@@ -26,11 +27,13 @@ public class InventoryManager : MonoBehaviour
 
 
     // Inventory control flags.
-    private int selectedItemIndex = -1;
+    public int selectedItemIndex = -1;
+    public bool ShowStorage = false;
 
 
     // Equipped variables.
     private InventoryItem equippedWeapon = null;
+    private InventoryItem equippedGrenade = null;
 
 
     // Crafting variables.
@@ -38,6 +41,7 @@ public class InventoryManager : MonoBehaviour
     private int firstIngredient = -1;
     public List<Sprite> craftedSprites = new List<Sprite>();
 
+    public bool shopOpened = false;
     private void Awake()
     {
         Instance = this;
@@ -73,13 +77,26 @@ public class InventoryManager : MonoBehaviour
         equippedWeapon = pistol;
     }
 
-    public void SelectItem(string itemIndex)
+    public void SelectItem(string itemIndex, string inInventory)
     {
         int index;
         if (int.TryParse(itemIndex, out index))
         {
             selectedItemIndex = index;
-            InventoryItem selectedItem = Items[selectedItemIndex];
+            InventoryItem selectedItem = null;
+
+            if (inInventory.Equals("0"))
+            {
+                if (selectedItemIndex<Items.Count())
+                {
+                    selectedItem = Items[selectedItemIndex];
+                }
+            }
+            if (inInventory.Equals("1"))
+            {
+                selectedItem = StorageItems[selectedItemIndex];
+            }
+            
             if (isCraftModeOn)
             {
                 if(selectedItemIndex == firstIngredient)
@@ -88,6 +105,7 @@ public class InventoryManager : MonoBehaviour
                     Debug.Log("Can't craft with the same item");
                     return;
                 }
+                updateCurrentEquipIndex(1, selectedItemIndex, firstIngredient);
                 if (Items[firstIngredient] is HerbItem)
                 {
                     // check second is the same..
@@ -135,6 +153,74 @@ public class InventoryManager : MonoBehaviour
                 ResetInventoryFlags();
                 ListItems();
             }
+            else if(ShowStorage)
+            {
+              
+                if(inInventory.Equals("0"))
+                {
+                    if (selectedItem != null)
+                    {
+                        if (selectedItem is AmmoItem)
+                        {
+                            AddAmmoToStorage((selectedItem as AmmoItem));
+                            Items.Remove(selectedItem);
+                        }
+                       else if(selectedItem != equippedWeapon)
+                        {
+                            if(equippedPanelController.mainController.GetCurrentGrenade() != null)
+                            {
+                                if ((selectedItem is GrenadeItem && (selectedItemIndex == equippedPanelController.mainController.GetCurrentGrenade().equipIndex)))
+                                {
+                                    equippedPanelController.mainController.HideGrenade();
+                                    equippedPanelController.RemoveGrenade();
+                                }
+                            }
+                            StorageItems.Add(selectedItem);
+                            Items.Remove(selectedItem);
+                        }
+                        updateCurrentEquipIndex(0, selectedItemIndex, -1);
+                        ListStorageItems();
+                        ListItems();
+                        DisableButtons();
+                        
+                    }
+                    else
+                    {
+                        Debug.Log("Please select a valid item");
+                    }
+                }
+                else
+                {
+                    
+                    if (selectedItem is AmmoItem)
+                    {
+                        var check = AddAmmoToInventory((selectedItem as AmmoItem));
+                        if (check)
+                        {
+                            StorageItems.Remove(selectedItem);
+                        }
+                        else
+                        {
+                            Debug.Log("Inventory full");
+                        }
+                    }
+                    
+                    else
+                    { 
+                         var check = Add(selectedItem);
+                         if (check)
+                         {
+                             StorageItems.Remove(selectedItem);
+                         }
+                        else
+                        {
+                            Debug.Log("Inventory full");
+                        }
+                    }
+                        ListItems();
+                        ListStorageItems();
+                }
+            }
             else
             {
                 ListButtons(selectedItem);
@@ -147,13 +233,36 @@ public class InventoryManager : MonoBehaviour
     {
         foreach (var item in Items)
         {
-            if( item is AmmoItem && (item as AmmoItem).AmmoType == ammo.AmmoType)
+            Debug.Log(ammo.AmmoType);
+            Debug.Log(item.itemName);
+
+            if ( item is AmmoItem && (item as AmmoItem).AmmoType == ammo.AmmoType)
             {
                 (item as AmmoItem).Amount += ammo.Amount;
+                ListItems();
                 return true;
             }
         }
-        return false;
+        var ammoCheck = Add(ammo);
+        return ammoCheck;
+    }
+    
+    public bool AddAmmoToStorage(AmmoItem ammo)
+    {
+        foreach (var item in StorageItems)
+        {
+            Debug.Log(ammo.AmmoType);
+            Debug.Log(item.itemName);
+
+            if (item is AmmoItem && (item as AmmoItem).AmmoType == ammo.AmmoType)
+            {
+                (item as AmmoItem).Amount += ammo.Amount;
+                ListItems();
+                return true;
+            }
+        }
+        StorageItems.Add(ammo);
+        return true;
     }
 
     public MixtureItem CraftPotion(HerbItem firstHerb, HerbItem secondHerb)
@@ -263,17 +372,89 @@ public class InventoryManager : MonoBehaviour
             return false;
         }
         Items.Add(item);
+        ListItems();
         return true;
     }
 
     public void Remove()
     {
         if (selectedItemIndex == -1) return;
-
+        updateCurrentEquipIndex(0, selectedItemIndex, -1);
+        if(equippedPanelController.mainController.GetCurrentGrenade() != null )
+                {
+                    if(selectedItemIndex == equippedPanelController.mainController.GetCurrentGrenade().equipIndex)
+                    {
+                        equippedPanelController.mainController.HideGrenade();
+                        equippedPanelController.RemoveGrenade();
+                    }
+                }
         Items.RemoveAt(selectedItemIndex);
         ListItems();
         selectedItemIndex = -1;
         DisableButtons();
+    }
+    public void Sell(int id)
+    {
+        int counter = 0;
+        foreach(var item in Items)
+        {
+            if (id == item.id) 
+            {
+                if(equippedPanelController.mainController.GetCurrentGrenade() != null )
+                {
+                    if(counter == equippedPanelController.mainController.GetCurrentGrenade().equipIndex)
+                    {
+                        equippedPanelController.mainController.HideGrenade();
+                        equippedPanelController.RemoveGrenade();
+                    }
+                }
+                updateCurrentEquipIndex(0, counter, -1);
+
+                Items.Remove(item);
+                ListItems();
+                break;
+            }
+            counter ++;
+        }
+    }
+    public void ListStorageItems()
+    {
+
+        foreach(Transform item in StorageContent)
+        {
+            Destroy(item.gameObject);
+        }
+
+        int StorageContentCount = 0;
+
+        foreach(var item in StorageItems)
+        {
+            GameObject newStorageItem = Instantiate(InventoryItem,StorageContent);
+
+            var itemIndex = newStorageItem.transform.Find("ItemIndex").GetComponent<TextMeshProUGUI>();
+            var inInventory = newStorageItem.transform.Find("InInventory").GetComponent<TextMeshProUGUI>();
+            var itemName = newStorageItem.transform.Find("ItemName").GetComponent<TextMeshProUGUI>();
+            var itemIcon = newStorageItem.transform.Find("ItemIcon").GetComponent<Image>();
+
+            itemIndex.text = StorageContentCount.ToString();
+            itemName.text = item.itemName;
+            itemIcon.sprite = item.icon;
+            inInventory.text = "1";
+
+
+            itemName.gameObject.SetActive(true);
+            itemIcon.gameObject.SetActive(true);
+
+            if (item is AmmoItem)
+            {
+                var ammoCountText = newStorageItem.transform.Find("AmmoCount").GetComponent<TextMeshProUGUI>();
+                ammoCountText.text = $"x{(item as AmmoItem).Amount}";
+                ammoCountText.gameObject.SetActive(true);
+            }
+
+            StorageContentCount++;
+
+        }
     }
 
     public void ListItems()
@@ -360,7 +541,6 @@ public class InventoryManager : MonoBehaviour
             if(item is GrenadeItem && (selectedItemIndex == equippedPanelController.mainController.GetCurrentGrenade().equipIndex))
             {
                 buttonsToDraw.Remove(EquipButton);
-                buttonsToDraw.Remove(DiscardButton);
             }
         }
         
@@ -391,6 +571,7 @@ public class InventoryManager : MonoBehaviour
         if(item is GrenadeItem)
         {
             equippedPanelController.EquipGrenade((item as GrenadeItem) , selectedItemIndex);
+            equippedGrenade = item;
             DisableButtons();
             return;
         }
@@ -401,7 +582,7 @@ public class InventoryManager : MonoBehaviour
         if(selectedItemIndex == -1) return;
 
         InventoryItem selectedItem = Items[selectedItemIndex];
-
+        updateCurrentEquipIndex(0, selectedItemIndex, -1);
         if(selectedItem is HerbItem)
         {
             if ( (selectedItem as HerbItem).HerbType == HerbType.Green)
@@ -513,6 +694,31 @@ public class InventoryManager : MonoBehaviour
         Items.RemoveAt(equippedPanelController.mainController.GetCurrentGrenade().equipIndex);
         equippedPanelController.RemoveGrenade();
         //equippedPanelController.mainController.HideGrenade();
+    }
+    public void updateCurrentEquipIndex (int method, int index , int index2 )
+    {
+        if(equippedPanelController.mainController.GetCurrentGrenade() != null)
+        {
+            if (method == 0)
+        {
+            if(equippedPanelController.mainController.GetCurrentGrenade().equipIndex > index  )
+            {
+                equippedPanelController.mainController.GetCurrentGrenade().equipIndex --;
+            }
+        }
+        else
+        {
+            if (equippedPanelController.mainController.GetCurrentGrenade().equipIndex > index && equippedPanelController.mainController.GetCurrentGrenade().equipIndex > index2)
+            {
+                equippedPanelController.mainController.GetCurrentGrenade().equipIndex-=2;
+            }
+            else if (equippedPanelController.mainController.GetCurrentGrenade().equipIndex > index || equippedPanelController.mainController.GetCurrentGrenade().equipIndex > index2)
+            {
+                equippedPanelController.mainController.GetCurrentGrenade().equipIndex--;
+            }
+        }
+        }
+       
     }
 
 }

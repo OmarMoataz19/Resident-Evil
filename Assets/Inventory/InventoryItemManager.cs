@@ -12,6 +12,9 @@ public class InventoryItemManager : MonoBehaviour
             gameObject.
             transform.
             Find("ItemIndex").
+            GetComponent<TextMeshProUGUI>().text, gameObject.
+            transform.
+            Find("InInventory").
             GetComponent<TextMeshProUGUI>().text);
     }
 }

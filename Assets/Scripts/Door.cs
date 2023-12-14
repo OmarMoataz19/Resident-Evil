@@ -52,7 +52,7 @@ public class Door : MonoBehaviour
     {
         if (coll.tag == "Player")
         {
-            txt.text = opened ? "" : "Press E To Open Door";
+            txt.text = opening || opened ? "" : "Press E To Open Door";
             trig = true;
         }
     }

@@ -16,4 +16,6 @@ MonoBehaviour:
   itemName: Normal Gun Powder
   icon: {fileID: 21300000, guid: 57f3606ff7c30574b9e6e951b943d44b, type: 3}
   ItemType: 5
+  baseCost: 10
+  sellPrice: 5
   GunPowderType: 0

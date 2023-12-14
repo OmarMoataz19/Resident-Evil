@@ -10,7 +10,9 @@ public class ZombieMain : MonoBehaviour
     LeonAnimationController LeonAnimatorScript;
     RigBuilder rigBuilder;
 
-    public GameObject knockedParticle;
+    public GameObject knockedParticle;    
+    public GameObject coinsOnDeath;
+
 
     public GameObject currentTarget;
     public GameObject Axe;
@@ -19,6 +21,8 @@ public class ZombieMain : MonoBehaviour
     public bool isStunned;
     public bool isGrappling;
     public bool grappleBroken;
+    public bool stabToKill;
+    public bool isDead;
 
 
     // Start is called before the first frame update
@@ -36,17 +40,28 @@ public class ZombieMain : MonoBehaviour
         LeonAnimatorScript = currentTarget.GetComponent<LeonAnimationController>();
         // rigBuilder = GetComponent<RigBuilder>();
     }
+    float getDistanceFromLeon(){
+        return Vector3.Distance(transform.position,currentTarget.transform.position);
+    }
+
+
+    bool closeFromLeon(float f, bool withY){
+        if(withY){
+            float diff = (transform.position.y-currentTarget.transform.position.y);
+            return getDistanceFromLeon()<=f &&  diff < 0.5 && diff> -0.5;
+        }
+        return getDistanceFromLeon()<=f;
+    }
 
     // Update is called once per frame
     void Update()
     {
-    
     if (ZombieAnimator.GetCurrentAnimatorStateInfo(2).IsName("Zombie Grab") && 
     ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Punch")){
         Debug.Log("ERROR");
     }
 
-    if (!ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Walk")){
+    if (!ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Walk") || ZombieAnimator.GetCurrentAnimatorStateInfo(2).IsName("Zombie Grab")){
         agent.velocity = Vector3.zero;
         // agent.updateRotation  = true;
     
@@ -57,24 +72,29 @@ public class ZombieMain : MonoBehaviour
         isGrappling = false;
         GetComponent<CapsuleCollider>().enabled = true; 
     }
+
+
  
     if(!LeonAnimatorScript.isGrappled){
         ZombieAnimator.SetTrigger("waitingOnGrappleDone");
     }
 
-        agent.destination =   currentTarget.transform.position;
+        agent.destination = currentTarget.transform.position;
          if(!isStunned && !LeonAnimatorScript.isInvincible &&
-         agent.remainingDistance<1f && agent.remainingDistance!=0 && ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Walk")){
+         closeFromLeon(1f,true) && ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Walk")){
             if(LeonAnimatorScript.isGrappled){
                 ZombieAnimator.ResetTrigger("waitingOnGrappleDone");
                 ZombieAnimator.Play("Zombie Idle 0");
             }
             else{    
+                Vector3 directionToTarget = transform.position - currentTarget.transform.position;
+                float angle = Vector3.Angle(transform.forward, directionToTarget);
+                 if(Mathf.Abs(angle)>150f && Mathf.Abs(angle)<210f){
                 if(hasWeaopn){
                     ZombieAnimator.SetTrigger("AxeSwipe");
                 }
                 else{
-                    if(Random.Range(1,4) == 1 && !ZombieAnimator.GetBool("Punch") && !ZombieAnimator.GetBool("isPunch")){
+                    if(Random.Range(1,2) == 1 && !ZombieAnimator.GetBool("Punch") && !ZombieAnimator.GetBool("isPunch")){
                         ZombieAnimator.SetBool("isGrab",true);
                         ZombieAnimator.SetTrigger("Grab");
                     }
@@ -83,9 +103,12 @@ public class ZombieMain : MonoBehaviour
                         ZombieAnimator.SetTrigger("Punch");
                     }
                 }
+
+
+                 }
             }
         }
-        else if (!isStunned && !LeonAnimatorScript.isGrappled && agent.remainingDistance>5f && hasWeaopn 
+        else if (!isStunned && !LeonAnimatorScript.isGrappled && !closeFromLeon(5f,false) && hasWeaopn 
         && (Time.frameCount % 120 == 0) && (Random.Range(1,5) ==1)
         && ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Walk"))
         {
@@ -93,33 +116,11 @@ public class ZombieMain : MonoBehaviour
             hasWeaopn = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.J)){
-            GetHit(1);
-        }
-
         if (Input.GetKeyDown(KeyCode.P)){
             StunZombie();
         }
 
-        if (Input.GetKeyDown(KeyCode.U)){
-            ZombieAnimator.Play("Zombie Death");
-            agent.enabled = false;
-            GetComponent<ZombieMain>().enabled = false;
-        } 
 
-        if (Input.GetKeyDown(KeyCode.T)){
-            ZombieAnimator.Play("Zombie Grab");
-        } 
-        
-        if (Input.GetKeyDown(KeyCode.Y)){
-            ZombieAnimator.Play("Zombie Grapple Release");
-        } 
-
-
-        if (Input.GetKeyDown(KeyCode.B)){
-            // rigBuilder.enabled = false;
-            killWhileStunned();
-        } 
 
         if (ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Grapple")){
             if(!isGrappling){
@@ -136,11 +137,13 @@ public class ZombieMain : MonoBehaviour
             Vector3 targetPos = transform.position + (transform.forward * 0.2f);
             targetPos.y = currentTarget.transform.position.y;
 
-            float rotationspeed = 0.015f;
+
+            float rotationspeed = 0.025f;
             float movementspeed = 0.025f;
 
             currentTarget.transform.rotation = Quaternion.Lerp(currentTarget.transform.rotation, targetrotation, Time.time * rotationspeed);
             currentTarget.transform.position = Vector3.Lerp(currentTarget.transform.position, targetPos, Time.time * movementspeed);
+            
             // Physics.SyncTransforms();
         }
 
@@ -181,27 +184,57 @@ public class ZombieMain : MonoBehaviour
         }        
 
 
+        if (ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Stun") && isStunned){
+           if(closeFromLeon(1f,true)){
+                LeonAnimatorScript.stunnedZombieScipt = this;
+                stabToKill = true;
+           }else{
+            stabToKill = false;
+           }
+        }else{
+            stabToKill = false;
+        }        
+
     }
 
     public void ThrowAxe(){
-            Axe.GetComponent<AxeThrowProjectile>().enabled = true;
+        if(isDead){
+            return;
+        } 
+        Axe.GetComponent<AxeThrowProjectile>().enabled = true;
     }
 
     public void GetHit(int damage){
+        if(isDead){
+            return;
+        }
         print(damage);
         if(damage>= health){
-            ZombieAnimator.Play("Zombie Death 2");
-            agent.enabled = false;
-            generateGold();
-            GetComponent<ZombieMain>().enabled = false;
-            GetComponent<CapsuleCollider>().enabled = false;
+            if(isStunned){
+                killWhileStunned();
+            }else{
+                ZombieAnimator.Play("Zombie Death 2");
+                agent.enabled = false;
+                knockedParticle.SetActive(false);
+                isDead = true;
+                // generateGold();
+                GetComponent<ZombieMain>().enabled = false;
+                GetComponent<CapsuleCollider>().enabled = false;
+            }
         }else{
-            ZombieAnimator.Play("Zombie Reaction hit");
+            if(isStunned){
+                ZombieAnimator.SetTrigger("UnStun");
+            }else if(!ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie UnStun")){
+                ZombieAnimator.Play("Zombie Reaction hit",-1,0f);
+            }   
             health = health - damage;
         }
     }
 
     public void StunZombie(){
+        if(isDead || isStunned){
+            return;
+        }
         isStunned = true;
         StartCoroutine(SetKnockedParticle());
         agent.updateRotation  = false;
@@ -210,7 +243,10 @@ public class ZombieMain : MonoBehaviour
     }
 
     public void checkForGrabHit(){
-        if(agent.remainingDistance<1f && !LeonAnimatorScript.isGrappled && !LeonAnimatorScript.isInvincible){
+        if(isDead || isStunned){
+            return;
+        }
+        if(closeFromLeon(1f,true) && !LeonAnimatorScript.isGrappled && !LeonAnimatorScript.isInvincible){
             Vector3 directionToTarget = transform.position - currentTarget.transform.position;
             float angle = Vector3.Angle(transform.forward, directionToTarget);
             if(Mathf.Abs(angle)>130f && Mathf.Abs(angle)<230f){
@@ -220,7 +256,10 @@ public class ZombieMain : MonoBehaviour
     }
 
     public void chechForAxeSwipeHit(){
-        if(agent.remainingDistance<1f && !LeonAnimatorScript.isGrappled && !LeonAnimatorScript.isInvincible){
+        if(isDead || isStunned){
+            return;
+        }
+        if(closeFromLeon(1f,true) && !LeonAnimatorScript.isGrappled && !LeonAnimatorScript.isInvincible){
             Vector3 directionToTarget = transform.position - currentTarget.transform.position;
             float angle = Vector3.Angle(transform.forward, directionToTarget);
             if(Mathf.Abs(angle)>150f && Mathf.Abs(angle)<210f){
@@ -232,7 +271,10 @@ public class ZombieMain : MonoBehaviour
 
     IEnumerator SetStunFalse(){
         yield return new WaitForSeconds(5); //wait 5 seconds
+        if(isStunned){
         ZombieAnimator.SetTrigger("UnStun");
+        }
+        isStunned = false;
     }
 
     IEnumerator SetGrapplingFalse(){
@@ -256,8 +298,11 @@ public class ZombieMain : MonoBehaviour
     public void killWhileStunned(){
         if(isStunned){
             GetComponent<CapsuleCollider>().enabled = false;
-            generateGold();
+            // generateGold();
+            stabToKill = false;
             knockedParticle.SetActive(false);
+            health = -3;
+            isDead = true;
             ZombieAnimator.SetTrigger("Death 2");
             agent.enabled = false;
             GetComponent<ZombieMain>().enabled = false;
@@ -270,7 +315,7 @@ public class ZombieMain : MonoBehaviour
     }
 
     public void generateGold(){
-        Debug.Log(Random.Range(5,51));
+        Instantiate(coinsOnDeath, transform.position+ new Vector3(0,0.3f,0), Quaternion.identity);
     }
 
 

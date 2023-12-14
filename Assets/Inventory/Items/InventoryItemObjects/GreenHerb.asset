@@ -16,4 +16,6 @@ MonoBehaviour:
   itemName: Green Herb
   icon: {fileID: 21300000, guid: 5f0ce6d6a345d454184143893616d80c, type: 3}
   ItemType: 4
+  baseCost: 20
+  sellPrice: 15
   HerbType: 1

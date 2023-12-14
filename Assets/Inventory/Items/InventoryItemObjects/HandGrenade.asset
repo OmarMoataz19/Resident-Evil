@@ -16,4 +16,6 @@ MonoBehaviour:
   itemName: Hand Grenade
   icon: {fileID: 21300000, guid: 4b443655cda598348a713d65d7bad83f, type: 3}
   ItemType: 2
+  baseCost: 15
+  sellPrice: 10
   GrenadeType: 0

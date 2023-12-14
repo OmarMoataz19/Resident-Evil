@@ -16,4 +16,6 @@ MonoBehaviour:
   itemName: Green Red Mixture
   icon: {fileID: 21300000, guid: 82c67f2106d97f74eacf7f58df8181ae, type: 3}
   ItemType: 6
+  baseCost: 0
+  sellPrice: 20
   MixtureType: 1
