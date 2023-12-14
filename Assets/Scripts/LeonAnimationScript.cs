@@ -24,9 +24,13 @@ public class LeonAnimationScript : StateMachineBehaviour
         if(stateInfo.IsName("Leon Stab Zombie")){
             animator.SetTrigger("DoneStab");
         }
-        if(stateInfo.IsName("Leon Throw Up Grenade")){
-            animator.SetTrigger("GrappleRelease");
+
+        if(stateInfo.IsName("Throw Object")){
+            animator.ResetTrigger("Hold Grenade");
         }
+        // if(stateInfo.IsName("Leon Throw Up Grenade")){
+        //     animator.SetTrigger("GrappleRelease");
+        // }
         // if(stateInfo.IsName("Leon Knife Grapple Stab 2")){
         //     animator.SetTrigger("GrappleRelease");
         // }

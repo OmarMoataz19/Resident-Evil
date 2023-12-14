@@ -156,4 +156,12 @@ public class MainController : MonoBehaviour
     {
         return hp;
     }
+     public int GetGold()
+    {
+        return gold;
+    }
+    public void SetGold (int gold)
+    {
+        this.gold = gold;
+    }
 }

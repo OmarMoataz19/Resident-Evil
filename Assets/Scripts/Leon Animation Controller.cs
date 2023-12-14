@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using TMPro;
 public class LeonAnimationController : MonoBehaviour
 {
     public MainController mainController;
@@ -10,12 +11,17 @@ public class LeonAnimationController : MonoBehaviour
     public GameObject knife;
     public GameObject invertedKnife;
     public ZombieMain holdingZombieScipt;
+    public ZombieMain stunnedZombieScipt;
+    public TextMeshProUGUI UI;
+    public bool test;
     
     public bool isGrappled;
     public bool isInvincible;
     private bool AxeSwipe;
     public bool threwGrenade;
     public bool actualGrenade;
+    
+    private bool showText;
 
     public int LeonHP = 8;
 
@@ -26,26 +32,53 @@ public class LeonAnimationController : MonoBehaviour
     {
         LeonAnimator = GetComponent<Animator>();
         playerInputController = GetComponent<StarterAssets.StarterAssetsInputs>();
-
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if(showText){
+        if( mainController.GetCurrentDurability() >=2){
+            UI.text = "Press E to Stab \n";
+        }
+        if(mainController.GetCurrentGrenade() != null){
+            UI.text += "Press G to throw grenade";
+        }
+        } 
+        else{
+            UI.text = "";
+        }
+
+        if(UI.text == "" && stunnedZombieScipt!=null && stunnedZombieScipt.stabToKill && mainController.GetCurrentDurability() >=1){
+            UI.text = "Press E to Stab";
+        }
     
         //Leon Uses his grenade
-        if(isGrappled && Input.GetKeyDown(KeyCode.G)){
+        if(isGrappled && showText && mainController.GetCurrentGrenade() != null && Input.GetKeyDown(KeyCode.G)){
             LeonAnimator.Play("Leon Throw Up Grenade");
             threwGrenade = true;
             holdingZombieScipt.grappleBroken = true;
+            showText = false;
             actualGrenade = true;
         }
 
-        if (isGrappled && Input.GetKeyDown(KeyCode.F)){
+        if (isGrappled&& mainController.GetCurrentDurability() >=2 && showText && Input.GetKeyDown(KeyCode.E)){
             LeonAnimator.SetTrigger("StabWhileGrappled");
             holdingZombieScipt.grappleBroken = true;
+            showText = false;
             threwGrenade = true;
+            mainController.SetKnifeDurability(mainController.GetCurrentDurability() - 2);
         }
+
+        if (stunnedZombieScipt!=null && stunnedZombieScipt.stabToKill &&
+         mainController.GetCurrentDurability() >=1 && Input.GetKeyDown(KeyCode.E)){
+            LeonAnimator.Play("Leon Stab Zombie 3");
+            LeonAnimator.Play("Leon Stand To Kneel 2");
+            mainController.SetKnifeDurability(mainController.GetCurrentDurability() - 1);
+            stunnedZombieScipt.killWhileStunned();
+        }
+
 
         if(LeonAnimator.GetCurrentAnimatorStateInfo(5).IsName("Leon Knife Grapple Stab 2")){
             if(LeonAnimator.GetCurrentAnimatorStateInfo(5).normalizedTime>0.3f && threwGrenade){
@@ -66,8 +99,25 @@ public class LeonAnimationController : MonoBehaviour
            }
         }
 
+        if(LeonAnimator.GetCurrentAnimatorStateInfo(3).IsName("Leon Throw Up Grenade")){
+           if(threwGrenade){
+            threwGrenade = false;
+            holdingZombieScipt.distractedByGrenade();
+            LeonAnimator.SetTrigger("ReleaseFast");
+
+           }
+           if(LeonAnimator.GetCurrentAnimatorStateInfo(3).normalizedTime>0.96f){
+            startMovment();
+           }
+        }
+
+
+
+
+
 
         if (LeonAnimator.GetCurrentAnimatorStateInfo(1).IsName("Leon Bite")){
+            showText = false;
             if(LeonAnimator.GetCurrentAnimatorStateInfo(1).normalizedTime>0.9f){
                 if(!isInvincible){
                     startMovment();
@@ -121,6 +171,7 @@ public class LeonAnimationController : MonoBehaviour
     }
 
     public void getBit(){
+        showText = false;
         LeonAnimator.Play("Leon Bite Pause");
         LeonAnimator.Play("Idle Walk Run Blend");
     }
@@ -140,15 +191,40 @@ public class LeonAnimationController : MonoBehaviour
         playerInputController.move = new Vector2(0f,0f);
         playerInputController.canMove = false;
         playerInputController.canJump = false;
-        playerInputController.canSprint = false;   
+        playerInputController.canSprint = false;  
+        playerInputController.aim = false; 
+        playerInputController.canAim = false;   
         isGrappled = true;
+        showText = true;
+        hideWeapons();
     }
 
     public void startMovment(){
         playerInputController.canMove = true;
         playerInputController.canJump = true;
         playerInputController.canSprint = true; 
+        playerInputController.canAim = true;   
         isGrappled = false;
+        ShowWeapon();
+
+    }
+
+        public void stopMovment2(){
+        playerInputController.move = new Vector2(0f,0f);
+        playerInputController.canMove = false;
+        playerInputController.canJump = false;
+        playerInputController.canSprint = false;  
+        playerInputController.aim = false; 
+        playerInputController.canAim = false;   
+        hideWeapons();
+    }
+
+        public void startMovment2(){
+        playerInputController.canMove = true;
+        playerInputController.canJump = true;
+        playerInputController.canSprint = true; 
+        playerInputController.canAim = true;   
+        ShowWeapon();
     }
 
     public void setSideHitTrigger(bool hasWeaopn){
@@ -196,6 +272,14 @@ public class LeonAnimationController : MonoBehaviour
         } 
 
     }    
+
+    public void hideWeapons(){
+        mainController.HideWeapons();
+    }
+
+    public void ShowWeapon(){
+        mainController.ShowWeapon();
+    }
 
 
     
