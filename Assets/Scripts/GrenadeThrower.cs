@@ -64,18 +64,25 @@ public class GrenadeThrower : MonoBehaviour
         {
            Grenade = mainController.GetCurrentGrenade().GetComponent<Rigidbody>();
         }
-        if (Application.isFocused && Input.GetKey(KeyCode.G) && mainController.GetCurrentGrenade() != null)
+        if (Application.isFocused && Input.GetKey(KeyCode.G) && mainController.GetCurrentGrenade() != null && Time.timeScale !=0f)
         {
+            if(!leonAnimationController.isGrappled)
+            {
             Animator.transform.rotation = Quaternion.Euler(
                 Animator.transform.eulerAngles.x,
                 Camera.transform.rotation.eulerAngles.y,
                 Animator.transform.eulerAngles.z
             );
-            if(!leonAnimationController.isGrappled)
-            {
             DrawProjection();
+            Animator.ResetTrigger("Rage3");
             Animator.SetTrigger("Hold Grenade");
             mainController.HideWeapons();
+            }
+            else{
+            Animator.SetTrigger("Rage3");
+            Animator.ResetTrigger("Throw Grenade");
+            Animator.ResetTrigger("Hold Grenade");
+            LineRenderer.enabled = false;
             }
         }
         else
@@ -83,11 +90,12 @@ public class GrenadeThrower : MonoBehaviour
             LineRenderer.enabled = false;
         }
         
-        if (Input.GetKeyUp(KeyCode.G) && IsGrenadeThrowAvailable && mainController.GetCurrentGrenade() != null)
+        if (Input.GetKeyUp(KeyCode.G) && IsGrenadeThrowAvailable && mainController.GetCurrentGrenade() != null && !leonAnimationController.isGrappled )
         {
             IsGrenadeThrowAvailable = false;
             Animator.SetTrigger("Throw Grenade");
             Animator.ResetTrigger("Hold Grenade");
+            Animator.ResetTrigger("Rage3");
             mainController.ShowWeapon();
             // ReleaseGrenade();
         }
@@ -133,7 +141,7 @@ public class GrenadeThrower : MonoBehaviour
         Grenade.transform.SetParent(null, true);
         if(leonAnimationController.isGrappled)
         {
-            Grenade.AddForce(Vector3.up * ThrowStrength, ForceMode.Impulse);
+            Grenade.AddForce(Vector3.up * 4f, ForceMode.Impulse);
         }
         else
         {
