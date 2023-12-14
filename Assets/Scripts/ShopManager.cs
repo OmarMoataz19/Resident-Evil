@@ -36,6 +36,9 @@ public class ShopManager : MonoBehaviour
 
     public List<Sprite> shopSprites = new List<Sprite>();
 
+    private bool purchasedShotgun = false;
+    private bool purchasedRifle = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -98,8 +101,14 @@ public class ShopManager : MonoBehaviour
     {
         for (int i = 0; i < shopItemsSO.Length; i++)
         {
-            if (mainController.GetGold() >= shopItemsSO[i].baseCost && shopItemsSO[i].baseCost != 0)
+            if (mainController.GetGold() >= shopItemsSO[i].baseCost && shopItemsSO[i].baseCost != 0 )
+            {
                 myPurchaseBtns[i].interactable = true;
+                if ((purchasedShotgun && shopItemsSO[i].itemName.Equals("Shotgun")) || (purchasedRifle && shopItemsSO[i].itemName.Equals("AK-14")))
+                {
+                    myPurchaseBtns[i].interactable = false;
+                }
+            }
             else
                 myPurchaseBtns[i].interactable = false;
 
@@ -210,12 +219,14 @@ public class ShopManager : MonoBehaviour
                     weapons.AmmoType = AmmoType.AssaultRifle;
                     weapons.WeaponType = WeaponType.AssaultRifle;
                     weapons.Ammo = 30;
+                    purchasedRifle = true;
                 }
                 if (shopItemsSO[btnNo].itemName.Equals("Shotgun"))
                 {
                     weapons.AmmoType = AmmoType.ShotGun;
                     weapons.WeaponType = WeaponType.ShotGun;
                     weapons.Ammo = 8;
+                    purchasedShotgun = true;
                 }
 
                 var inventoryCheck = inventoryManager.Add(weapons);

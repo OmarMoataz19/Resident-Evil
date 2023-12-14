@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Cinemachine;
 
 public class MainController : MonoBehaviour
 {
@@ -21,6 +22,13 @@ public class MainController : MonoBehaviour
     public TextMeshProUGUI hp2Text;
     public TextMeshProUGUI knifeDurabilityText;
     public Inventory inventory;
+
+    public CinemachineVirtualCamera aimCamera;
+    private float pistolsShoulderOffset = 0.7f;
+    private float pistolsShoulderOffsetZ = 1.09f;
+    private float akShoulderOffset = 0.9f;
+    private float akShoulderOffsetZ = 1.4f;
+
     void Start()
     {
         hp = 8;
@@ -65,7 +73,7 @@ public class MainController : MonoBehaviour
                 weaponObjects[3].SetActive(false);
                 break;
             }
-            else if (WeaponItem.itemName == "ShotGun")
+            else if (WeaponItem.itemName == "Shotgun")
             {
                 currentWeapon = weapons[3];
                 weaponObjects[0].SetActive(false);
@@ -76,6 +84,7 @@ public class MainController : MonoBehaviour
             }
         }
         currentWeapon.SetBulletsLeft(WeaponItem.Ammo); //bullets left
+        fixCamera();
     }
 
     public Weapon GetCurrentWeapon()
@@ -167,5 +176,24 @@ public class MainController : MonoBehaviour
     public void SetGold (int gold)
     {
         this.gold = gold;
+    }
+    public void fixCamera()
+    {
+        var thirdPersonFollow = aimCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+        if (thirdPersonFollow != null)
+        {
+            Vector3 currentOffset = thirdPersonFollow.ShoulderOffset;
+            if(currentWeapon.name =="pistol" || currentWeapon.name =="revolver")
+            {
+                currentOffset.x = pistolsShoulderOffset;
+                currentOffset.z = pistolsShoulderOffsetZ;
+            }
+            else
+            {
+                currentOffset.x = akShoulderOffset;
+                currentOffset.z = akShoulderOffsetZ;
+            }
+            thirdPersonFollow.ShoulderOffset = currentOffset;
+        }
     }
 }
