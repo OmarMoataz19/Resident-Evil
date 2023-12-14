@@ -396,6 +396,7 @@ public class InventoryManager : MonoBehaviour
     public void Sell(int id)
     {
         int counter = 0;
+        InventoryItem secondItem = null;
         foreach(var item in Items)
         {
             if (id == item.id) 
@@ -404,14 +405,29 @@ public class InventoryManager : MonoBehaviour
                 {
                     if(counter == equippedPanelController.mainController.GetCurrentGrenade().equipIndex)
                     {
+                        for (int i = counter + 1; i < Items.Count; i++)
+                        {
+                            if(Items[i].id == id)
+                            {
+                                secondItem = Items[i];
+                                break;
+                            }
+                        }
+                        if(secondItem != null)
+                        {
+                            Items.Remove(secondItem);
+                            ListItems();
+                            DisableButtons();
+                            return;
+                        }
                         equippedPanelController.mainController.HideGrenade();
                         equippedPanelController.RemoveGrenade();
                     }
                 }
                 updateCurrentEquipIndex(0, counter, -1);
-
                 Items.Remove(item);
                 ListItems();
+                DisableButtons();
                 break;
             }
             counter ++;

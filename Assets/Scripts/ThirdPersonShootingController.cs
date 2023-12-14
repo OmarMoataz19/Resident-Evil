@@ -154,13 +154,13 @@ public class ThirdPersonShootingController : MonoBehaviour
         float tempY = 0f;
         if (mainController.GetCurrentWeapon().name == "pistol" || mainController.GetCurrentWeapon().name == "revolver" )
         {
-            tempX = 240f;
-            tempY = -20f;
+            // tempX = 240f;
+            // tempY = -20f;
         }
         else
         {
-            tempX = 400;
-            tempY = -20f;
+            // tempX = 400;
+            // tempY = -20f;
         }
         Vector2 screenCenterPosition = new Vector2((Screen.width  / 2f) + tempX , (Screen.height  / 2f) + tempY);
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPosition);
