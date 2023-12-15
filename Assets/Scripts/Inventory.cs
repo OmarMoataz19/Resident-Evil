@@ -2,6 +2,7 @@ using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Inventory : MonoBehaviour
 {
@@ -10,6 +11,10 @@ public class Inventory : MonoBehaviour
     public GameObject inventory;
     public bool inventoryActive = false;
     public GameObject HealthPanel;
+    public TextMeshProUGUI textMeshProUGUI;
+    public Cheats cheats;
+    public GameObject bg;
+    public StarterAssets.StarterAssetsInputs starterAssetsInputs;
     void Start()
     {
         
@@ -29,7 +34,11 @@ public class Inventory : MonoBehaviour
             invManager.ListItems();
             
             Cursor.lockState = inventoryActive ? CursorLockMode.None : CursorLockMode.Locked;
-            Time.timeScale = inventoryActive ? 0 : 1;
+            textMeshProUGUI.text = "";
+            bg.SetActive(true);
+            starterAssetsInputs.LookInput(new Vector2(0f,0f));
+            starterAssetsInputs.canLook = false;
+            Time.timeScale = inventoryActive ? 0 : cheats.isSlowMotion? 0.5f : 1.0f;
         }
         if (Input.GetKeyDown(KeyCode.Escape) && inventoryActive)
         {
@@ -37,6 +46,8 @@ public class Inventory : MonoBehaviour
             HealthPanel.SetActive(false);
             inventory.SetActive(inventoryActive);
             Cursor.lockState = inventoryActive ? CursorLockMode.None : CursorLockMode.Locked;
+            bg.SetActive(false);  
+            starterAssetsInputs.canLook = true;
             Time.timeScale = inventoryActive ? 0 : 1;
         }
     }

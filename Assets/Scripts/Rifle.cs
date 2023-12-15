@@ -9,7 +9,7 @@ public class Rifle : Weapon
         damage = 1;
         timeBetweenShooting = 0.2f; 
         weaponRange = Range.Medium;
-        reloadTime = 2.6f; 
+        reloadTime = 3f; 
         magazineSize = 30;
         bulletsLeft = magazineSize;
         firingMode = FiringMode.Automatic;

@@ -9,7 +9,7 @@ public class Pistol : Weapon
         damage = 2;
         timeBetweenShooting = 0.2f;
         weaponRange = Range.Medium;
-       // reloadTime = 1f; 
+        reloadTime = 4.1f; 
         magazineSize = 12;
         bulletsLeft = magazineSize;
         firingMode = FiringMode.SingleShot;

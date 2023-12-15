@@ -8,6 +8,11 @@ TagManager:
   - Weapon
   - PickUp
   - Game Logic
+  - Spade
+  - Clubs
+  - KeyCard
+  - Heart
+  - Emblem
   layers:
   - Default
   - TransparentFX

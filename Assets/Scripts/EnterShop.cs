@@ -14,6 +14,9 @@ public class EnterShop : MonoBehaviour
     public Inventory inventory;
     public GameObject HealthPanel;
     public ShopManager shopManager;
+    public Cheats cheats;
+    public GameObject bg;
+    public StarterAssets.StarterAssetsInputs starterAssetsInputs;
     void Start()
     {
         
@@ -29,16 +32,19 @@ public class EnterShop : MonoBehaviour
                 shopActive = false;
                 invManager.ShowStorage = false;
                 HealthPanel.SetActive(false);
+                bg.SetActive(false);
                 RefreshShop();
+                starterAssetsInputs.canLook = true;
             }
             Cursor.lockState = shopActive || inventory.inventoryActive ? CursorLockMode.None : CursorLockMode.Locked;
-            Time.timeScale = shopActive || inventory.inventoryActive ? 0 : 1;
+            Time.timeScale = shopActive || inventory.inventoryActive ? 0 : cheats.isSlowMotion? 0.5f : 1.0f;
     }
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            textMeshProUGUI.text = "Press E to Open Store";
+            print(inventory.inventoryActive);
+            textMeshProUGUI.text = inventory.inventoryActive? "": "Press E to Open Store";
             if(Input.GetKeyDown(KeyCode.E))
             {
                 textMeshProUGUI.text = "";
@@ -49,6 +55,9 @@ public class EnterShop : MonoBehaviour
                 invManager.shopOpened = true;
                 shopActive = true;
                 HealthPanel.SetActive(true);
+                bg.SetActive(true);
+                starterAssetsInputs.LookInput(new Vector2(0f,0f));
+                starterAssetsInputs.canLook = false;
             }
   
         }
