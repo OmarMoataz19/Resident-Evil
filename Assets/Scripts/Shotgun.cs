@@ -9,7 +9,7 @@ public class Shotgun : Weapon
         damage = 3; 
         timeBetweenShooting = 0.5f;
         weaponRange = Range.Short;
-        //reloadTime = 3f; 
+        reloadTime = 3.3f; 
         magazineSize = 8;
         bulletsLeft = magazineSize;
         firingMode = FiringMode.SingleShot;

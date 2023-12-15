@@ -39,6 +39,7 @@ public class ShopManager : MonoBehaviour
     private bool purchasedShotgun = false;
     private bool purchasedRifle = false;
 
+
     // Start is called before the first frame update
     void Start()
     {

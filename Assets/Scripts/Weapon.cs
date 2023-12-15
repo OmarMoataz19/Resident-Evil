@@ -63,7 +63,8 @@ public abstract class Weapon : MonoBehaviour
                 HandleHit(hit);
             }
 
-            Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+            var muzzle = Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+            Destroy(muzzle, 3);
             bulletsLeft--;
             inventoryManager.ShootWeapon();
             UpdateHUD();

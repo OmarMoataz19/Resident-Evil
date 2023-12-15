@@ -134,6 +134,15 @@ public class GrenadeThrower : MonoBehaviour
 
     private void ReleaseGrenade()
     {
+        if(mainController.GetCurrentGrenade() == null)
+        {
+            LineRenderer.enabled = false;
+            Animator.ResetTrigger("Hold Grenade");
+            Animator.ResetTrigger("Rage3");
+            mainController.ShowWeapon();
+            IsGrenadeThrowAvailable = true;
+            return;
+        }
         Grenade.velocity = Vector3.zero;
         Grenade.angularVelocity = Vector3.zero;
         Grenade.isKinematic = false;
@@ -147,6 +156,7 @@ public class GrenadeThrower : MonoBehaviour
         {
             Grenade.AddForce(Camera.transform.forward * ThrowStrength, ForceMode.Impulse);
         }
+
         inventoryManager.RemoveCurrentEquippedGrenade();
         StartCoroutine(ExplodeGrenade());
     }

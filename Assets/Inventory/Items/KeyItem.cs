@@ -8,7 +8,9 @@ public enum KeyType
     Emblem,
     KeyCard,
     Spade,
-    Heart
+    Heart,
+    Club
+
 }
 
 [CreateAssetMenu(fileName = "Key Item", menuName = "Item/Create New Key Item")]

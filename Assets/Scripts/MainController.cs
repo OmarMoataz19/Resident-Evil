@@ -29,6 +29,8 @@ public class MainController : MonoBehaviour
     private float akShoulderOffset = 0.9f;
     private float akShoulderOffsetZ = 1.4f;
 
+    private bool enableCheats = false;
+    public Cheats cheats;
     void Start()
     {
         hp = 8;
@@ -41,6 +43,10 @@ public class MainController : MonoBehaviour
         hpText.text = hp + "";
         gold2Text.text = gold + "";
         hp2Text.text = hp + "";
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            enableCheats = !enableCheats;
+        }
     }
     public void EquipWeapon(WeaponItem WeaponItem)
     {
@@ -93,6 +99,10 @@ public class MainController : MonoBehaviour
     }
     public void SetHp(int newHp)
     {
+        if(cheats.isInvincible)
+        {
+            return;
+        }
         healthController.SetHp(newHp);
         hp = newHp;
     }
@@ -195,5 +205,9 @@ public class MainController : MonoBehaviour
             }
             thirdPersonFollow.ShoulderOffset = currentOffset;
         }
+    }
+    public bool GetCheats()
+    {
+        return enableCheats;
     }
 }

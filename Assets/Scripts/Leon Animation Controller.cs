@@ -25,7 +25,8 @@ public class LeonAnimationController : MonoBehaviour
 
     public int LeonHP = 8;
 
-
+    public DamageHud damageHud;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -243,6 +244,7 @@ public class LeonAnimationController : MonoBehaviour
             LeonHP = mainController.GetHp() - x;
             mainController.SetHp(LeonHP);
         }
+        damageHud.TakeDamage();
         isInvincible = true;
         StartCoroutine(SetInvincibleFalse());
     }
