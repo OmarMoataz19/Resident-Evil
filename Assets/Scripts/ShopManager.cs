@@ -146,6 +146,8 @@ public class ShopManager : MonoBehaviour
                 if (inventoryCheck)
                 {
                    mainController.SetGold(mainController.GetGold()-shopItemsSO[btnNo].baseCost);
+                   Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.buySound);
+
                 }
                 else
                 {
@@ -174,6 +176,7 @@ public class ShopManager : MonoBehaviour
                 if (inventoryCheck)
                 {
                    mainController.SetGold(mainController.GetGold() - shopItemsSO[btnNo].baseCost);
+                   Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.buySound);
                 }
                 else
                 {
@@ -201,6 +204,7 @@ public class ShopManager : MonoBehaviour
                 if (inventoryCheck)
                 {
                     mainController.SetGold(mainController.GetGold() - shopItemsSO[btnNo].baseCost);
+                    Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.buySound);
                 }
                 else
                 {
@@ -234,6 +238,7 @@ public class ShopManager : MonoBehaviour
                 if (inventoryCheck)
                 {
                     mainController.SetGold(mainController.GetGold() - shopItemsSO[btnNo].baseCost);
+                    Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.buySound);
                 }
                 else
                 {
@@ -275,6 +280,7 @@ public class ShopManager : MonoBehaviour
                 if (inventoryCheck)
                 {
                     mainController.SetGold(mainController.GetGold() - shopItemsSO[btnNo].baseCost);
+                    Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.buySound);
                 }
                 else
                 {
@@ -319,6 +325,7 @@ public class ShopManager : MonoBehaviour
         }
         Debug.Log("Sell Pressed");
         mainController.SetGold(mainController.GetGold() + shopItemsSO[btnNo].sellPrice);
+        Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.buySound);
         inventoryManager.Sell(shopItemsSO[btnNo].id);
     } 
 

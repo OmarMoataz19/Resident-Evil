@@ -22,9 +22,10 @@ public class OpenDorg : MonoBehaviour
         {
         if (Input.GetKeyDown(KeyCode.E) && !opened)
         {
-        animator.SetTrigger("DorgOpen");
-        opened = true;
-        Invoke("SetColliderToTrue",0.6f);
+            animator.SetTrigger("DorgOpen");
+            opened = true;
+            Invoke("SetColliderToTrue",0.6f);
+            Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.dorgSound);
         }
             txt.text = opened ? "" : "Press E To Open Drawer";
         }

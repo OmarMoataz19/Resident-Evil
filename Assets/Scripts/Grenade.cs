@@ -17,6 +17,7 @@ public abstract class Grenade : MonoBehaviour
     bool thrown;
     public int equipIndex = -1;
 
+    public AudioClip audioClip;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +33,7 @@ public abstract class Grenade : MonoBehaviour
 
         if (thrown && countDownGrenade < 0 && !hasExploded)
         {
+
             Explode();
             hasExploded = true;
 

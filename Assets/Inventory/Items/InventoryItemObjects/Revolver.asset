@@ -19,5 +19,5 @@ MonoBehaviour:
   baseCost: 0
   sellPrice: 0
   WeaponType: 1
-  Ammo: 6
+  Ammo: 1
   AmmoType: 1

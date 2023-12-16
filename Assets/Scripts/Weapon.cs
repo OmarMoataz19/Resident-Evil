@@ -47,11 +47,18 @@ public abstract class Weapon : MonoBehaviour
     //References
     public InventoryManager inventoryManager;
     public Animator leonAnimator;
+
+    public AudioClip shootClip; 
+    public AudioClip reloadClip;
+    public AudioClip bulletsGroundClip;
+    public AudioSource audioSource;
     public virtual void Shoot()
     {
         //isReadyToShoot = true;
         if (bulletsLeft > 0 && !isReloading && isReadyToShoot)
         {
+            audioSource.PlayOneShot(shootClip);
+            audioSource.PlayOneShot(bulletsGroundClip);
             animator.SetTrigger("Shoot");
             isReadyToShoot = false;
             Vector2 screenCenterPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -111,7 +118,7 @@ public abstract class Weapon : MonoBehaviour
         {
             return false;
         }
-
+        audioSource.PlayOneShot(reloadClip);
         isReloading = true;
         animator.SetTrigger("Reload");
         Invoke(nameof(ReloadFinished), reloadTime);

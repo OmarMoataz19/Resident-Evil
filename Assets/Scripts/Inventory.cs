@@ -6,6 +6,7 @@ using TMPro;
 
 public class Inventory : MonoBehaviour
 {
+    public static Inventory Instance;
     // Start is called before the first frame update
     public InventoryManager invManager;
     public GameObject inventory;
@@ -15,12 +16,48 @@ public class Inventory : MonoBehaviour
     public Cheats cheats;
     public GameObject bg;
     public StarterAssets.StarterAssetsInputs starterAssetsInputs;
-    void Start()
-    {
-        
-    }
+
+    public AudioSource audioSource;
+    public AudioSource audioSource2;
+    public AudioSource audioSource3;
+    public AudioSource audioSource4;
+    public AudioSource audioSource5;
+    public AudioClip itemsAudioClip;
+    public AudioClip keyAudioClip;
+    public AudioClip invalidAudioClip;
+    public AudioClip coinsAudioClip;
+
+    // leon damage taken
+    public AudioClip leonDamage;
+    public AudioClip leonDamage2;
+    public AudioClip leonDies;
+
+    // zombie take damage
+    public AudioClip zombieDamage;
+    public AudioClip zombieDamage2;
+    public AudioClip zombieDamage3;
+    public AudioClip zombieDies;
+
+    //zombie deal damage
+    public AudioClip zombieAttack;
+    public AudioClip zombieAttack2;
+    public AudioClip zombieAttack3;
+
+    //dorg
+    public AudioClip dorgSound;
+    public AudioClip buySound;
+
+    public AudioClip knifeStab;
+
+    public AudioClip zombieWalk;
+    public AudioClip zombieGrowl;
+    public AudioClip allZombieSounds;
 
     // Update is called once per frame
+    private void Awake()
+    {
+        Instance = this;
+    }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab) && !invManager.shopOpened )

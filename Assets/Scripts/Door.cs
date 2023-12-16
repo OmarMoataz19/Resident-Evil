@@ -15,6 +15,11 @@ public class Door : MonoBehaviour
 
     public bool canOpen;
     public InventoryManager inventoryManager;
+
+    public AudioSource audioSource ;
+    public AudioClip audioClip;
+    public AudioClip riggedClip;
+
     void Start()
     {
         defaulRot = transform.eulerAngles;
@@ -27,6 +32,7 @@ public class Door : MonoBehaviour
         if (trig && Input.GetKeyDown(KeyCode.E) && !opening && canOpen)
         {
             opening = true; 
+            audioSource.PlayOneShot(audioClip);
         }
 
         if (opening)
@@ -58,6 +64,7 @@ public class Door : MonoBehaviour
                         inventoryManager.Items.RemoveAt(i);
                         canOpen = true;
                         opening = true;
+                        audioSource.PlayOneShot(audioClip);
                         break;
                     }
                     else if (inventoryManager.Items[i].itemName == "Key Card" && this.gameObject.tag == "KeyCard")
@@ -65,6 +72,7 @@ public class Door : MonoBehaviour
                         inventoryManager.Items.RemoveAt(i);
                         canOpen = true;
                         opening = true;
+                        audioSource.PlayOneShot(audioClip);
                         break;
                     }
                     else if (inventoryManager.Items[i].itemName == "Spade Key" && this.gameObject.tag == "Spade")
@@ -72,6 +80,7 @@ public class Door : MonoBehaviour
                         inventoryManager.Items.RemoveAt(i);
                         canOpen = true;
                         opening = true;
+                        audioSource.PlayOneShot(audioClip);
                         break;
                     }
                     else if (inventoryManager.Items[i].itemName == "Club Key" && this.gameObject.tag == "Clubs")
@@ -79,6 +88,7 @@ public class Door : MonoBehaviour
                         inventoryManager.Items.RemoveAt(i);
                         canOpen = true;
                         opening = true;
+                        audioSource.PlayOneShot(audioClip);
                         break;
                     }
                     else if (inventoryManager.Items[i].itemName == "Emblem" && this.gameObject.tag == "Emblem")
@@ -86,8 +96,13 @@ public class Door : MonoBehaviour
                         inventoryManager.Items.RemoveAt(i);
                         canOpen = true;
                         opening = true;
+                        audioSource.PlayOneShot(audioClip);
                         break;
                     }
+                }
+                if(!canOpen)
+                {
+                    audioSource.PlayOneShot(riggedClip);
                 }
             }
         }
