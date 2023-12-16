@@ -56,6 +56,31 @@ public class ZombieMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+    if(ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Walk"))
+    {
+        if (!Inventory.Instance.audioSource3.isPlaying)
+            {
+                Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieWalk);
+                
+                 if (!Inventory.Instance.audioSource5.isPlaying)
+                 {
+                    int random = Random.Range(1,5);
+                    if(random == 1){
+                        Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieGrowl);
+                    }else if(random == 2){
+                        Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack);
+                    }else if(random == 3){
+                        Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack2);
+                    }
+                    else
+                    {
+                        Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack3);
+                    }
+                    //Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.allZombieSounds);
+                 }
+            }
+    }    
     if (ZombieAnimator.GetCurrentAnimatorStateInfo(2).IsName("Zombie Grab") && 
     ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Punch")){
         Debug.Log("ERROR");
@@ -155,6 +180,10 @@ public class ZombieMain : MonoBehaviour
         if (ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Neck Bite")){
             if(ZombieAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime<0.3f){
                 currentTarget.transform.position = currentTarget.transform.position + currentTarget.transform.forward * 0.3f * Time.deltaTime;
+                if(!Inventory.Instance.audioSource5.isPlaying)
+                {
+                    Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack2);
+                }
             }
         }
 
@@ -208,8 +237,9 @@ public class ZombieMain : MonoBehaviour
         if(isDead){
             return;
         }
-        print(damage);
+
         if(damage>= health){
+            Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieDies);
             if(isStunned){
                 killWhileStunned();
             }else{
@@ -222,6 +252,14 @@ public class ZombieMain : MonoBehaviour
                 GetComponent<CapsuleCollider>().enabled = false;
             }
         }else{
+            int random = Random.Range(1,4);
+            if(random == 1){
+                Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieDamage);
+            }else if(random == 2){
+                Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieDamage2);
+            }else if(random == 3){
+                Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieDamage3);
+            }
             if(isStunned){
                 ZombieAnimator.SetTrigger("UnStun");
             }else if(!ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie UnStun")){

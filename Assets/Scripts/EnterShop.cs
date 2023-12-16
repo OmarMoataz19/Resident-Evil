@@ -43,7 +43,6 @@ public class EnterShop : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            print(inventory.inventoryActive);
             textMeshProUGUI.text = inventory.inventoryActive? "": "Press E to Open Store";
             if(Input.GetKeyDown(KeyCode.E))
             {

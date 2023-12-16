@@ -66,6 +66,7 @@ public class LeonAnimationController : MonoBehaviour
 
         if (isGrappled&& mainController.GetCurrentDurability() >=2 && showText && Input.GetKeyDown(KeyCode.E)){
             LeonAnimator.SetTrigger("StabWhileGrappled");
+            Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.knifeStab);
             holdingZombieScipt.grappleBroken = true;
             showText = false;
             threwGrenade = true;
@@ -77,6 +78,7 @@ public class LeonAnimationController : MonoBehaviour
             LeonAnimator.Play("Leon Stab Zombie 3");
             LeonAnimator.Play("Leon Stand To Kneel 2");
             mainController.SetKnifeDurability(mainController.GetCurrentDurability() - 1);
+            Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.knifeStab);
             stunnedZombieScipt.killWhileStunned();
         }
 
@@ -245,6 +247,24 @@ public class LeonAnimationController : MonoBehaviour
             mainController.SetHp(LeonHP);
         }
         damageHud.TakeDamage();
+        if(Random.Range(0,2)==0){
+            Inventory.Instance.audioSource2.PlayOneShot(Inventory.Instance.leonDamage);
+        }
+        else{
+            Inventory.Instance.audioSource2.PlayOneShot(Inventory.Instance.leonDamage2);
+        }
+
+         if (Random.Range(0,3)==0){
+            Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieAttack);
+        }
+        else if (Random.Range(0,3)==1){
+            Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieAttack2);
+        }
+        else{
+            Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieAttack3);
+        }
+
+
         isInvincible = true;
         StartCoroutine(SetInvincibleFalse());
     }

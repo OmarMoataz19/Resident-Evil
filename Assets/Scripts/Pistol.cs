@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Pistol : Weapon
 {
+
     private void Awake()
     {
         damage = 2;
@@ -14,6 +15,7 @@ public class Pistol : Weapon
         bulletsLeft = magazineSize;
         firingMode = FiringMode.SingleShot;
         // The Animator component and the attackPoint are set in the Inspector
+        
     }
 
     protected override void HandleHit(RaycastHit hit)

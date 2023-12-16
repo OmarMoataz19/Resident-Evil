@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
  
-
+using UnityEngine.EventSystems;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
@@ -371,6 +371,18 @@ public class InventoryManager : MonoBehaviour
             Debug.Log("Can't take the item");
             return false;
         }
+        if(item is WeaponItem && ((item as WeaponItem).WeaponType.Equals(WeaponType.Revolver)))
+        {
+            (item as WeaponItem).Ammo = 6;
+        }
+        if(item is WeaponItem && ((item as WeaponItem).WeaponType.Equals(WeaponType.ShotGun)))
+        {
+            (item as WeaponItem).Ammo = 8;
+        }
+        if(item is WeaponItem && ((item as WeaponItem).WeaponType.Equals(WeaponType.AssaultRifle)))
+        {
+            (item as WeaponItem).Ammo = 30;
+        }
         Items.Add(item);
         ListItems();
         return true;
@@ -486,6 +498,7 @@ public class InventoryManager : MonoBehaviour
             itemName.gameObject.SetActive(false);
             itemIcon.gameObject.SetActive(false);
             ammoCount.gameObject.SetActive(false);
+            EventSystem.current.SetSelectedGameObject(null);
         }
 
         foreach (var item in Items)
@@ -533,7 +546,7 @@ public class InventoryManager : MonoBehaviour
 
         List<GameObject> buttonsToDraw = new List<GameObject>();
 
-        if (IsEquipable(item) && !isCraftModeOn)
+        if (IsEquipable(item) && !isCraftModeOn && !equippedPanelController.mainController.GetCurrentWeapon().GetIsReloading())
         {
             buttonsToDraw.Add(EquipButton);
         }

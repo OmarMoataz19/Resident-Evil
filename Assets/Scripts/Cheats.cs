@@ -9,6 +9,9 @@ public class Cheats : MonoBehaviour
     public Door [] doors;
     public bool isSlowMotion = false; 
     public bool isInvincible = false;
+    public bool isOpened = false;
+    public AudioSource audioSource;
+    public AudioClip clip;
     void Update()
     {
         if(mainController.GetCheats())
@@ -30,9 +33,10 @@ public class Cheats : MonoBehaviour
             {
                 AddGold();
             }
-            if (Input.GetKeyDown(KeyCode.Alpha5))
+            if (Input.GetKeyDown(KeyCode.Alpha5) && !isOpened)
             {
                 OpenAllDoors(); 
+                isOpened = true;
             }
         }
 
@@ -66,6 +70,7 @@ public class Cheats : MonoBehaviour
             // door.canOpen = true;
             door.SetOpening();
         }
+            audioSource.PlayOneShot(clip);
     }
 
 }

@@ -31,6 +31,8 @@ public class MainController : MonoBehaviour
 
     private bool enableCheats = false;
     public Cheats cheats;
+
+    public AudioSource audioSource;
     void Start()
     {
         hp = 8;
@@ -105,6 +107,10 @@ public class MainController : MonoBehaviour
         }
         healthController.SetHp(newHp);
         hp = newHp;
+        if( newHp <= 0 )
+        {
+            Inventory.Instance.audioSource2.PlayOneShot(Inventory.Instance.leonDies);
+        }
     }
 
     public Grenade GetCurrentGrenade()
@@ -136,6 +142,7 @@ public class MainController : MonoBehaviour
     }
     public void HideGrenade()
     {
+        audioSource.PlayOneShot(currentGrenade.audioClip);
         grenadeObjects[0].SetActive(false);
         grenadeObjects[1].SetActive(false);
         currentGrenade = null;

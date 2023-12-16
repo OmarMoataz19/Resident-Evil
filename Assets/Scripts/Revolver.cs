@@ -9,7 +9,7 @@ public class Revolver : Weapon
         damage = 5;
         timeBetweenShooting = 1.0f;
         weaponRange = Range.Long;
-        reloadTime = 5.5f; 
+        reloadTime = 5f; 
         magazineSize = 6;
         bulletsLeft = magazineSize;
         firingMode = FiringMode.SingleShot;

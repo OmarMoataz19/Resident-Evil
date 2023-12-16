@@ -10,7 +10,6 @@ public class CoinsPickUp : MonoBehaviour
     public int amount =0;
     public MainController mainController;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +24,7 @@ public class CoinsPickUp : MonoBehaviour
             // addAMOUNT();
             int x = mainController.GetGold();
             mainController.SetGold(x + amount);
+            Inventory.Instance.audioSource.PlayOneShot(Inventory.Instance.coinsAudioClip);
             Destroy(gameObject);
     }
 
