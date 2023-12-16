@@ -13,6 +13,7 @@ TagManager:
   - KeyCard
   - Heart
   - Emblem
+  - rooms
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - Camera
   - Zombie
   - Player
-  - 
+  - WalkableArea
   - 
   - 
   - 

@@ -35,6 +35,7 @@ public class LeonAnimationController : MonoBehaviour
         playerInputController = GetComponent<StarterAssets.StarterAssetsInputs>();
     }
 
+     
     // Update is called once per frame
     void Update()
     {
@@ -150,11 +151,6 @@ public class LeonAnimationController : MonoBehaviour
             }
         }
 
-
-        if (Input.GetKeyDown(KeyCode.H)){
-           LeonAnimator.Play("Leon Stab Zombie 3");
-           LeonAnimator.Play("Leon Stand To Kneel 2");
-        }
     
     }
 
