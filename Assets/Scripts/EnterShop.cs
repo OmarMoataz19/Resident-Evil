@@ -17,6 +17,8 @@ public class EnterShop : MonoBehaviour
     public Cheats cheats;
     public GameObject bg;
     public StarterAssets.StarterAssetsInputs starterAssetsInputs;
+
+    public MainController mainController;
     void Start()
     {
         
@@ -24,7 +26,7 @@ public class EnterShop : MonoBehaviour
 
     void Update()
     {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) && shopActive)
             {
                 Shop.SetActive(false);
                 Inventory.SetActive(false);
@@ -36,8 +38,8 @@ public class EnterShop : MonoBehaviour
                 RefreshShop();
                 starterAssetsInputs.canLook = true;
             }
-            Cursor.lockState = shopActive || inventory.inventoryActive ? CursorLockMode.None : CursorLockMode.Locked;
-            Time.timeScale = shopActive || inventory.inventoryActive ? 0 : cheats.isSlowMotion? 0.5f : 1.0f;
+            Cursor.lockState = shopActive || inventory.inventoryActive || mainController.isPaused || mainController.won || mainController.lost ? CursorLockMode.None : CursorLockMode.Locked;
+            Time.timeScale = shopActive || inventory.inventoryActive || mainController.isPaused || mainController.won || mainController.lost ? 0 : cheats.isSlowMotion ? 0.5f : 1.0f;
     }
     private void OnTriggerStay(Collider other)
     {

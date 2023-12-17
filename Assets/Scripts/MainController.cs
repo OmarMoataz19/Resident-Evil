@@ -33,6 +33,13 @@ public class MainController : MonoBehaviour
     public Cheats cheats;
 
     public AudioSource audioSource;
+
+    public bool isPaused = false;
+
+    public bool won = false;
+    public bool lost = false;
+    public GameOverManager gameOverManager;
+
     void Start()
     {
         hp = 8;
@@ -48,6 +55,15 @@ public class MainController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             enableCheats = !enableCheats;
+        }
+        if(hp == 0)
+        {
+            lost = true;
+        }
+        
+        if( won || lost)
+        {
+            gameOverManager.GameOver();
         }
     }
     public void EquipWeapon(WeaponItem WeaponItem)
