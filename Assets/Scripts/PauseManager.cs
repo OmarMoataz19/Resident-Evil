@@ -12,9 +12,20 @@ public class PauseManager : MonoBehaviour
     public StarterAssets.StarterAssetsInputs starterAssetsInputs;
 
     public MainController mainController;
+    public Inventory inventory;
+    public EnterShop entershop;
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !pauseCanvasActive)
+         if (Input.GetKeyDown(KeyCode.Escape) && inventory.inventoryActive && !pauseCanvasActive)
+        {
+            inventory.HideInventory();
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && entershop.shopActive && !pauseCanvasActive)
+        {
+            entershop.HideShop();
+        }
+
+       else if (Input.GetKeyDown(KeyCode.Escape) && !pauseCanvasActive && !inventory.inventoryActive && !entershop.shopActive)
         {
             pauseCanvasActive = true;
             mainController.isPaused = true;
@@ -23,6 +34,8 @@ public class PauseManager : MonoBehaviour
             starterAssetsInputs.LookInput(new Vector2(0f,0f));
             starterAssetsInputs.canLook = false;
         }
+
+
         else if (Input.GetKeyDown(KeyCode.Escape) && pauseCanvasActive)
         {
             PauseCanvas.SetActive(false);
@@ -34,6 +47,8 @@ public class PauseManager : MonoBehaviour
     public void ResumeClickHandler ()
     {
         pauseCanvasActive = false;
+        starterAssetsInputs.canLook = true;
+        mainController.isPaused = false;
         Time.timeScale = 1;
         PauseCanvas.SetActive(false);
     }

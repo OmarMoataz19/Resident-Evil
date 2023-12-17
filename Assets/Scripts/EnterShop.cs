@@ -26,18 +26,18 @@ public class EnterShop : MonoBehaviour
 
     void Update()
     {
-            if (Input.GetKeyDown(KeyCode.Escape) && shopActive)
-            {
-                Shop.SetActive(false);
-                Inventory.SetActive(false);
-                invManager.shopOpened = false;
-                shopActive = false;
-                invManager.ShowStorage = false;
-                HealthPanel.SetActive(false);
-                bg.SetActive(false);
-                RefreshShop();
-                starterAssetsInputs.canLook = true;
-            }
+            // if (Input.GetKeyDown(KeyCode.Escape) && shopActive)
+            // {
+            //     Shop.SetActive(false);
+            //     Inventory.SetActive(false);
+            //     invManager.shopOpened = false;
+            //     shopActive = false;
+            //     invManager.ShowStorage = false;
+            //     HealthPanel.SetActive(false);
+            //     bg.SetActive(false);
+            //     RefreshShop();
+            //     starterAssetsInputs.canLook = true;
+            // }
             Cursor.lockState = shopActive || inventory.inventoryActive || mainController.isPaused || mainController.won || mainController.lost ? CursorLockMode.None : CursorLockMode.Locked;
             Time.timeScale = shopActive || inventory.inventoryActive || mainController.isPaused || mainController.won || mainController.lost ? 0 : cheats.isSlowMotion ? 0.5f : 1.0f;
     }
@@ -78,5 +78,17 @@ public class EnterShop : MonoBehaviour
         shopManager.LoadPanels();
         shopManager.CheckPurchasable();
         shopManager.CheckSellable();
+    }
+    public void HideShop()
+    {
+        Shop.SetActive(false);
+        Inventory.SetActive(false);
+        invManager.shopOpened = false;
+        shopActive = false;
+        invManager.ShowStorage = false;
+        HealthPanel.SetActive(false);
+        bg.SetActive(false);
+        RefreshShop();
+        starterAssetsInputs.canLook = true;
     }
 }

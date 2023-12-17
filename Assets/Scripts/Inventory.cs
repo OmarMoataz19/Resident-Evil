@@ -77,8 +77,19 @@ public class Inventory : MonoBehaviour
             starterAssetsInputs.canLook = false;
             Time.timeScale = inventoryActive ? 0 : cheats.isSlowMotion? 0.5f : 1.0f;
         }
-        if (Input.GetKeyDown(KeyCode.Escape) && inventoryActive)
-        {
+        // if (Input.GetKeyDown(KeyCode.Escape) && inventoryActive )
+        // {
+        //     inventoryActive = false;
+        //     HealthPanel.SetActive(false);
+        //     inventory.SetActive(inventoryActive);
+        //     Cursor.lockState = inventoryActive ? CursorLockMode.None : CursorLockMode.Locked;
+        //     bg.SetActive(false);  
+        //     starterAssetsInputs.canLook = true;
+        //     Time.timeScale = inventoryActive ? 0 : 1;
+        // }
+    }
+    public void HideInventory()
+    {
             inventoryActive = false;
             HealthPanel.SetActive(false);
             inventory.SetActive(inventoryActive);
@@ -86,6 +97,6 @@ public class Inventory : MonoBehaviour
             bg.SetActive(false);  
             starterAssetsInputs.canLook = true;
             Time.timeScale = inventoryActive ? 0 : 1;
-        }
     }
+
 }
