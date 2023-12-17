@@ -26,6 +26,8 @@ public class LeonAnimationController : MonoBehaviour
     public int LeonHP = 8;
 
     public DamageHud damageHud;
+
+
     
 
     // Start is called before the first frame update
@@ -195,6 +197,7 @@ public class LeonAnimationController : MonoBehaviour
         playerInputController.canAim = false;   
         isGrappled = true;
         showText = true;
+
         hideWeapons();
     }
 
