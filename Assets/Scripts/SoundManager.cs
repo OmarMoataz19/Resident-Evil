@@ -12,6 +12,8 @@ public class SoundManager : MonoBehaviour
     public AudioSource audioSource5;
     public AudioSource audioSource6;
 
+    public AudioSource pauseSource;
+
     public MainController mainController;
     public EnterShop enterShop;
     public Inventory inventory;
@@ -28,9 +30,10 @@ public class SoundManager : MonoBehaviour
             audioSource.Pause();
             audioSource2.Pause();
             audioSource3.Pause();
-            audioSource4.Pause();
+            //audioSource4.Pause();
             audioSource5.Pause();
             audioSource6.Pause();
+            pauseSource.UnPause();
         }
         else
         {
@@ -40,6 +43,7 @@ public class SoundManager : MonoBehaviour
             audioSource4.UnPause();
             audioSource5.UnPause();
             audioSource6.UnPause();
+            pauseSource.Pause();
         }
     }
 }

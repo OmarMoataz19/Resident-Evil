@@ -64,31 +64,31 @@ public class ZombieMain : MonoBehaviour
     void Update()
     {
         
-    if(ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Walk"))
-    {
-        if (!Inventory.Instance.audioSource3.isPlaying)
-            {
-                Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieWalk);
-                
-                 if (!Inventory.Instance.audioSource5.isPlaying)
-                 {
-                    int random = Random.Range(1,5);
-                    if(random == 1){
-                        Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieGrowl);
-                    }else if(random == 2){
-                        Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack);
-                    }else if(random == 3){
-                        Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack2);
-                    }
-                    else
-                    {
-                        Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack3);
-                    }
-                    //Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.allZombieSounds);
-                 }
-            }
-    }  
     if(isChasingLeon){
+        if(ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Walk"))
+        {
+            if (!Inventory.Instance.audioSource3.isPlaying)
+                {
+                    Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieWalk);
+                    
+                    if (!Inventory.Instance.audioSource5.isPlaying)
+                    {
+                        int random = Random.Range(1,5);
+                        if(random == 1){
+                            Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieGrowl);
+                        }else if(random == 2){
+                            Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack);
+                        }else if(random == 3){
+                            Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack2);
+                        }
+                        else
+                        {
+                            Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack3);
+                        }
+                        //Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.allZombieSounds);
+                    }
+                }
+        }  
         ZombieAnimator.SetBool("chasingLeon",true);
 
 
