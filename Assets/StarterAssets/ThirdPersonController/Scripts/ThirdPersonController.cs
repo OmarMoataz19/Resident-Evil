@@ -151,6 +151,7 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+            FootstepAudioVolume = PlayerPrefs.GetFloat("soundEffectsVolume");
         }
 
         private void Update()
