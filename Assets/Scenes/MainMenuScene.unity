@@ -4250,7 +4250,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 137}
+  m_AnchoredPosition: {x: 0, y: 175.81}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1311046324
@@ -4273,13 +4273,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ta7ya masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya
-    masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya
-    masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya
-    masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya masrta7ya
-    masrta7ya masrta7ya masrta7ya masrta7ya masr
+  m_text: "3D-Models : \n1) https://assetstore.unity.com/\n2) https://sketchfab.com/feed\n3)
+    https://www.mixamo.com/\n\nSounds & Effects :\n1) https://pixabay.com/sound-effects/\n2)
+    https://www.youtube.com/\n\nAnimations:\n1) https://www.mixamo.com/\n\t"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 52cb95421939b3343ade2a7579e71c06, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 21307179227807236, guid: 52cb95421939b3343ade2a7579e71c06,
     type: 2}
   m_fontSharedMaterials: []
@@ -4344,7 +4342,7 @@ MonoBehaviour:
   m_margin: {x: -265.09375, y: 0, z: -215.92188, w: -290.7578}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1311046325
@@ -5023,7 +5021,7 @@ RectTransform:
   m_GameObject: {fileID: 1488608768}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.882695, y: 0.6742506, z: 0.64196}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1053746227}
@@ -5031,10 +5029,10 @@ RectTransform:
   - {fileID: 358921532}
   m_Father: {fileID: 1388812719}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -9, y: 0.0083237}
-  m_SizeDelta: {x: 560.4945, y: 1468.3}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 560.4945, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &1488608771
 CanvasRenderer:
@@ -7370,7 +7368,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -510, y: 150}
+  m_AnchoredPosition: {x: -318.7, y: 150}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2080474842
@@ -7393,25 +7391,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Aly Hassan Elsokkary (UI & Weapon Design)
-
-    Aly Hassan Elsokkary (UI
-    & Weapon Design)
-
-    Aly Hassan Elsokkary (UI & Weapon Design)
-
-    Aly Hassan
-    Elsokkary (UI & Weapon Design)
-
-    Aly Hassan Elsokkary (UI & Weapon Design)
-
-    Aly
-    Hassan Elsokkary (UI & Weapon Design)
-
-    Aly Hassan Elsokkary (UI & Weapon
-    Design)
-
-    Aly Hassan Elsokkary (UI & Weapon Design)'
+  m_text: "1) Ahmed Kayed: Zombies \n2) Omar Moataz: Leon & Integrations\n3) Mahmoud
+    Abdelaziz : Level Design & Inventory\n4) Abdelrahman Hanafy: Level Design & Inventory\n5)
+    Youssef Ahmed: Store \n6) Aly Hassan ElSokkary: Leon \n7) Ahmed Safa: Cheats
+    & Interactions \n8) Ahmed Sherif: Sounds & UI Screens"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 52cb95421939b3343ade2a7579e71c06, type: 2}
   m_sharedMaterial: {fileID: 21307179227807236, guid: 52cb95421939b3343ade2a7579e71c06,
@@ -7446,7 +7429,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
