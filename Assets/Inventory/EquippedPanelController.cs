@@ -15,6 +15,7 @@ public class EquippedPanelController : MonoBehaviour
 
     public MainController mainController;
 
+    public Sprite sprite;
     public void EquipWeapon(WeaponItem weaponItem)
     {
         WeaponImage.sprite = weaponItem.icon;
@@ -51,7 +52,7 @@ public class EquippedPanelController : MonoBehaviour
     public void RemoveGrenade ()
     {
         GrenadeName.text = "";
-        GrenadeImage.sprite = null;
+        GrenadeImage.sprite = sprite;
     }
 
 }
