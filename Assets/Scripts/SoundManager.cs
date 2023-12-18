@@ -15,9 +15,13 @@ public class SoundManager : MonoBehaviour
 
     public AudioSource pauseSource;
 
+    public AudioSource dieSource7;
+
     public MainController mainController;
     public EnterShop enterShop;
     public Inventory inventory;
+    
+    private bool playedDeathSound;
     void Start()
     {
         //take from the player prefs the sound effects and the bg music volume
@@ -32,6 +36,7 @@ public class SoundManager : MonoBehaviour
         audioSource3.volume = soundEffectsVolume;
         audioSource4.volume = soundEffectsVolume;
         audioSource5.volume = soundEffectsVolume;
+        dieSource7.volume = soundEffectsVolume;
     }
 
     // Update is called once per frame
@@ -56,6 +61,11 @@ public class SoundManager : MonoBehaviour
             audioSource5.UnPause();
             audioSource6.UnPause();
             pauseSource.Pause();
+        }
+        if(mainController.lost && !playedDeathSound)
+        {
+            dieSource7.Play();
+            playedDeathSound = true;
         }
     }
 }
