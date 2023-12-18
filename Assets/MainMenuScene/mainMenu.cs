@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class mainMenu : MonoBehaviour
 {
@@ -75,6 +76,8 @@ public class mainMenu : MonoBehaviour
     public void openOptions (GameObject options ) {
         options.SetActive( true );
         mainControls.SetActive(true);
+        TeamCredits.SetActive(false);
+        AssetsCredits.SetActive(false);
 
         //Reset all buttons
         ResetButtonProperties(closeButton);
@@ -127,7 +130,7 @@ public class mainMenu : MonoBehaviour
     public void playGame () {
         PlayerPrefs.SetFloat("bgMusicVolume", volumeSlider.value);
         PlayerPrefs.SetFloat("soundEffectsVolume", effectsSlider.value);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Demo");
+        SceneManager.LoadScene(1);
     }
 
     public void SetMusicVolume(float volume)

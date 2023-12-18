@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameOverManager : MonoBehaviour
 {
@@ -25,13 +26,13 @@ public class GameOverManager : MonoBehaviour
         Time.timeScale = 1;
         GameoverDeadCanvas.SetActive(false);
         GameoverWinCanvas.SetActive(false);
-        Application.LoadLevel("Demo");
+        SceneManager.LoadScene(2);
     }
     public void MainMenuClickHandler()
     {
         Time.timeScale = 1;
         GameoverDeadCanvas.SetActive(false);
         GameoverWinCanvas.SetActive(false);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
+        SceneManager.LoadScene(0);
     }
 }

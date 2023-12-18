@@ -9,7 +9,7 @@ public class cameraRotation : MonoBehaviour
     public float speed = 3.5f; // Speed of rotation
     void Start()
     {
-        
+        Time.timeScale = 1;
     }
 
     // Update is called once per frame
