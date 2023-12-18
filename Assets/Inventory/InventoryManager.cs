@@ -80,17 +80,18 @@ public class InventoryManager : MonoBehaviour
     public void SelectItem(string itemIndex, string inInventory)
     {
         int index;
+      
         if (int.TryParse(itemIndex, out index))
         {
             selectedItemIndex = index;
             InventoryItem selectedItem = null;
-
             if (inInventory.Equals("0"))
             {
                 if (selectedItemIndex<Items.Count())
                 {
                     selectedItem = Items[selectedItemIndex];
                 }
+
             }
             if (inInventory.Equals("1"))
             {
@@ -102,7 +103,10 @@ public class InventoryManager : MonoBehaviour
                 if(selectedItemIndex == firstIngredient)
                 {
                     // TODO: SHOW NOT ALLOWED
-                    Debug.Log("Can't craft with the same item");
+                    Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.invalidAudioClip);
+                    firstIngredient = -1;
+                    isCraftModeOn = false;
+                    ListButtons(Items[selectedItemIndex]);
                     return;
                 }
                 updateCurrentEquipIndex(1, selectedItemIndex, firstIngredient);
@@ -122,7 +126,7 @@ public class InventoryManager : MonoBehaviour
                     }
                     else
                     {
-                        // TODO: Indicate that this is invalid operation.
+                        Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.invalidAudioClip);
                     }
                 }
                 else if (Items[firstIngredient] is GunPowderItem)
@@ -142,13 +146,14 @@ public class InventoryManager : MonoBehaviour
                     }
                     else
                     {
-                        // TODO: Indicate that this is invalid operation.
+                        Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.invalidAudioClip);
                     }
                 }
                 else
                 {
                     // Invalid Selected item..
-                    // TODO: Indicate that this is invalid..
+                    Inventory.Instance.audioSource4.PlayOneShot(Inventory.Instance.invalidAudioClip);
+                    
                 }
                 ResetInventoryFlags();
                 ListItems();
@@ -225,6 +230,12 @@ public class InventoryManager : MonoBehaviour
             {
                 ListButtons(selectedItem);
             }
+        }
+        else
+        {
+            //ListItems();
+            DisableButtons();
+            selectedItemIndex = -1;
         }
         
     }
@@ -561,7 +572,7 @@ public class InventoryManager : MonoBehaviour
             buttonsToDraw.Add(CraftButton);
         }
 
-        if (!isCraftModeOn && !(item is WeaponItem) && !(item is KeyItem))
+        if (!isCraftModeOn && !(item is WeaponItem) && !(item is KeyItem) && item != null )
         {
             buttonsToDraw.Add(DiscardButton);
         }
