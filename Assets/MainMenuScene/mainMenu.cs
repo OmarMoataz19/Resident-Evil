@@ -157,7 +157,6 @@ public class mainMenu : MonoBehaviour
                 continue;
             }
 
-            // Check for TMP_Text component (for texts)
             TMP_Text text = child.GetComponent<TMP_Text>();
             if (text != null)
             {
