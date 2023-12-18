@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class SoundManager : MonoBehaviour
 {
     
@@ -19,7 +20,18 @@ public class SoundManager : MonoBehaviour
     public Inventory inventory;
     void Start()
     {
-        
+        //take from the player prefs the sound effects and the bg music volume
+        float musicVolume = PlayerPrefs.GetFloat("bgMusicVolume");
+        float soundEffectsVolume = PlayerPrefs.GetFloat("soundEffectsVolume");
+
+        pauseSource.volume = musicVolume;
+        audioSource6.volume = musicVolume;
+
+        audioSource.volume = soundEffectsVolume;
+        audioSource2.volume = soundEffectsVolume;
+        audioSource3.volume = soundEffectsVolume;
+        audioSource4.volume = soundEffectsVolume;
+        audioSource5.volume = soundEffectsVolume;
     }
 
     // Update is called once per frame

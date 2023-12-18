@@ -63,6 +63,6 @@ public class PauseManager : MonoBehaviour
     {
         Time.timeScale = 1;
         PauseCanvas.SetActive(false);
-        Application.LoadLevel("MainMenu");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
     }
 }

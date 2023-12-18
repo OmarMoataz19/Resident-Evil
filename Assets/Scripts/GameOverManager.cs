@@ -32,6 +32,6 @@ public class GameOverManager : MonoBehaviour
         Time.timeScale = 1;
         GameoverDeadCanvas.SetActive(false);
         GameoverWinCanvas.SetActive(false);
-        Application.LoadLevel("MainMenu");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
     }
 }
