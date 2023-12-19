@@ -14,6 +14,13 @@ public class LoadingScreen : MonoBehaviour
         asyncLoad = SceneManager.LoadSceneAsync(2);
         asyncLoad.allowSceneActivation = false; 
 
+        if (PlayerPrefs.HasKey("bgMusicVolume"))
+        {
+            float musicVolume = PlayerPrefs.GetFloat("bgMusicVolume");
+            videoPlayer.SetDirectAudioVolume(0, musicVolume);
+        }
+
+
         videoPlayer.loopPointReached += EndReached; 
         videoPlayer.Play();
         skipButton.gameObject.SetActive(false);
