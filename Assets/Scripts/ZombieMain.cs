@@ -24,6 +24,7 @@ public class ZombieMain : MonoBehaviour
     public bool stabToKill;
     public bool isDead;
     public bool isChasingLeon;
+    public MainController mainController;
 
 
     // Start is called before the first frame update
@@ -63,11 +64,10 @@ public class ZombieMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     if(isChasingLeon){
         if(ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Walk"))
         {
-            if (!Inventory.Instance.audioSource3.isPlaying)
+            if (!Inventory.Instance.audioSource3.isPlaying && !mainController.isPaused && !mainController.lost)
                 {
                     Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieWalk);
                     
@@ -89,6 +89,7 @@ public class ZombieMain : MonoBehaviour
                     }
                 }
         }  
+       
         ZombieAnimator.SetBool("chasingLeon",true);
 
 
@@ -263,13 +264,16 @@ public class ZombieMain : MonoBehaviour
                 GetComponent<CapsuleCollider>().enabled = false;
             }
         }else{
-            int random = Random.Range(1,4);
-            if(random == 1){
-                Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieDamage);
-            }else if(random == 2){
-                Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieDamage2);
-            }else if(random == 3){
-                Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieDamage3);
+            if(!Inventory.Instance.audioSource3.isPlaying)
+            {
+                int random = Random.Range(1,4);
+                if(random == 1){
+                    Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieDamage);
+                }else if(random == 2){
+                    Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieDamage2);
+                }else if(random == 3){
+                    Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieDamage3);
+                }
             }
             if(isStunned){
                 ZombieAnimator.SetTrigger("UnStun");
