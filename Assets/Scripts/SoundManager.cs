@@ -68,4 +68,17 @@ public class SoundManager : MonoBehaviour
             playedDeathSound = true;
         }
     }
+
+     void LateUpdate() {
+                if(mainController.isPaused || enterShop.shopActive || inventory.inventoryActive || mainController.won || mainController.lost)
+        {
+            audioSource.Pause();
+            audioSource2.Pause();
+            audioSource3.Pause();
+            //audioSource4.Pause();
+            audioSource5.Pause();
+            audioSource6.Pause();
+            pauseSource.UnPause();
+        }
+    }
 }

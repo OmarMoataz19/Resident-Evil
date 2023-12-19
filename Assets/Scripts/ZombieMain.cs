@@ -123,7 +123,8 @@ public class ZombieMain : MonoBehaviour
                         ZombieAnimator.SetTrigger("AxeSwipe");
                     }
                     else{
-                        if(Random.Range(1,2) == 1 && !ZombieAnimator.GetBool("Punch") && !ZombieAnimator.GetBool("isPunch")){
+                        //hookah addition
+                        if(Random.Range(1,3) == 1 && !ZombieAnimator.GetBool("Punch") && !ZombieAnimator.GetBool("isPunch")){
                             ZombieAnimator.SetBool("isGrab",true);
                             ZombieAnimator.SetTrigger("Grab");
                         }
@@ -369,6 +370,8 @@ public class ZombieMain : MonoBehaviour
     }
 
     public void generateGold(){
+        this.GetComponent<CapsuleCollider>().enabled = false;
+        this.GetComponent<BoxCollider>().enabled = false;
         Instantiate(coinsOnDeath, transform.position+ new Vector3(0,0.3f,0), Quaternion.identity);
     }
 
