@@ -28,7 +28,6 @@ public class LeonAnimationController : MonoBehaviour
     public DamageHud damageHud;
 
 
-    
 
     // Start is called before the first frame update
     void Start()
@@ -117,11 +116,6 @@ public class LeonAnimationController : MonoBehaviour
            }
         }
 
-
-
-
-
-
         if (LeonAnimator.GetCurrentAnimatorStateInfo(1).IsName("Leon Bite")){
             showText = false;
             if(LeonAnimator.GetCurrentAnimatorStateInfo(1).normalizedTime>0.9f){
@@ -153,7 +147,6 @@ public class LeonAnimationController : MonoBehaviour
             }
         }
 
-    
     }
 
 
@@ -256,14 +249,17 @@ public class LeonAnimationController : MonoBehaviour
                 Inventory.Instance.audioSource2.PlayOneShot(Inventory.Instance.leonDamage2);
             }
 
-            if (Random.Range(0,3)==0){
-                Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieAttack);
-            }
-            else if (Random.Range(0,3)==1){
-                Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieAttack2);
-            }
-            else{
-                Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieAttack3);
+            if (!Inventory.Instance.audioSource5.isPlaying)
+            {
+                if (Random.Range(0,3)==0){
+                    Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack);
+                }
+                else if (Random.Range(0,3)==1){
+                    Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack2);
+                }
+                else{
+                    Inventory.Instance.audioSource5.PlayOneShot(Inventory.Instance.zombieAttack3);
+                }
             }
         }
         else 

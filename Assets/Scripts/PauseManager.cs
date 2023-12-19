@@ -34,6 +34,7 @@ public class PauseManager : MonoBehaviour
             PauseCanvas.SetActive(pauseCanvasActive);
             starterAssetsInputs.LookInput(new Vector2(0f,0f));
             starterAssetsInputs.canLook = false;
+            Time.timeScale = 0;
         }
 
 
