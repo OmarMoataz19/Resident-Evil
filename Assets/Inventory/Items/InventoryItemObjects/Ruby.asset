@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 19
   itemName: Ruby
   icon: {fileID: 21300000, guid: a0adfc2dd3325fd4dbe8adfad86e7260, type: 3}
-  ItemType: 3
+  ItemType: 7
   baseCost: 0
   sellPrice: 200
   TreasureType: 1

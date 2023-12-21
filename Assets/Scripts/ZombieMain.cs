@@ -139,7 +139,7 @@ public class ZombieMain : MonoBehaviour
                     }
                 }
             }
-            else if (!isStunned && !LeonAnimatorScript.isGrappled && !closeFromLeon(5f,true) && hasWeaopn 
+            else if (!isStunned && !LeonAnimatorScript.isGrappled && !closeFromLeon(2f,true) && hasWeaopn 
             && (Time.frameCount % 120 == 0) && (Random.Range(1,5) ==1)
             && ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Walk"))
             {
