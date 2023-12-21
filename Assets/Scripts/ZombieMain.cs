@@ -67,7 +67,7 @@ public class ZombieMain : MonoBehaviour
     if(isChasingLeon){
         if(ZombieAnimator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Walk"))
         {
-            if (!Inventory.Instance.audioSource3.isPlaying && !mainController.isPaused && !mainController.lost)
+            if (!Inventory.Instance.audioSource3.isPlaying && !mainController.isPaused && !mainController.lost && !Inventory.Instance.inventoryActive)
                 {
                     Inventory.Instance.audioSource3.PlayOneShot(Inventory.Instance.zombieWalk);
                     

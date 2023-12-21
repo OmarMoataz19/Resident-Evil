@@ -21,7 +21,6 @@ public class CoinsPickUp : MonoBehaviour
 
     void Pickup()
     {
-            // addAMOUNT();
             int x = mainController.GetGold();
             mainController.SetGold(x + amount);
             Inventory.Instance.audioSource.PlayOneShot(Inventory.Instance.coinsAudioClip);
@@ -31,14 +30,15 @@ public class CoinsPickUp : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        //var hanafy = UI.GetComponent<TMPro.TextMeshPro>();
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && (UI.text == "Press E to Pickup \n" + amount + " coins" || UI.text == "")  && !mainController.tookItem)
         {
             UI.text = "Press E to Pickup \n" + amount + " coins";
             if (Input.GetKeyDown(KeyCode.E))
             {
-                Pickup();
                 UI.text="";
+                mainController.tookItem = true;
+                Pickup();
+                
             }
         } 
     }
@@ -47,6 +47,7 @@ public class CoinsPickUp : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             UI.text="";
+            //
         }
     }
 

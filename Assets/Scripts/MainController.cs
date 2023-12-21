@@ -40,6 +40,7 @@ public class MainController : MonoBehaviour
     public bool lost = false;
     public GameOverManager gameOverManager;
 
+    public bool tookItem = false;
     void Start()
     {
         hp = 8;
@@ -64,6 +65,10 @@ public class MainController : MonoBehaviour
         if( won || lost)
         {
             gameOverManager.GameOver();
+        }
+        if (tookItem)
+        {
+            StartCoroutine(callResetTookItem());
         }
     }
     public void EquipWeapon(WeaponItem WeaponItem)
@@ -163,6 +168,13 @@ public class MainController : MonoBehaviour
         grenadeObjects[1].SetActive(false);
         currentGrenade = null;
     }
+    public void HideGrenade2()
+    {
+        //inspired by kayed
+        grenadeObjects[0].SetActive(false);
+        grenadeObjects[1].SetActive(false);
+        currentGrenade = null;  
+    }
     public void HideWeapons()
     {
         weaponObjects[0].SetActive(false);
@@ -232,5 +244,11 @@ public class MainController : MonoBehaviour
     public bool GetCheats()
     {
         return enableCheats;
+    }
+
+    public IEnumerator callResetTookItem()
+    {
+        yield return new WaitForSeconds(0.3f);
+        tookItem = false;
     }
 }

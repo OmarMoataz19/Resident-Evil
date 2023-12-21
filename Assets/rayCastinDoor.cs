@@ -58,13 +58,9 @@ public class rayCastinDoor : MonoBehaviour
             }
 
             }
-            Debug.Log(roomNum);
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.right) * hit.distance, Color.yellow);
+
         }
-        else
-        {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.right) * 2f, Color.white);
-        }
+
     }
 
     
