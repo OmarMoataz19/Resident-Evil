@@ -26,20 +26,9 @@ public class EnterShop : MonoBehaviour
 
     void Update()
     {
-            // if (Input.GetKeyDown(KeyCode.Escape) && shopActive)
-            // {
-            //     Shop.SetActive(false);
-            //     Inventory.SetActive(false);
-            //     invManager.shopOpened = false;
-            //     shopActive = false;
-            //     invManager.ShowStorage = false;
-            //     HealthPanel.SetActive(false);
-            //     bg.SetActive(false);
-            //     RefreshShop();
-            //     starterAssetsInputs.canLook = true;
-            // }
-            Cursor.lockState = shopActive || inventory.inventoryActive || mainController.isPaused || mainController.won || mainController.lost ? CursorLockMode.None : CursorLockMode.Locked;
-            Time.timeScale = shopActive || inventory.inventoryActive || mainController.isPaused || mainController.won || mainController.lost ? 0 : cheats.isSlowMotion ? 0.5f : 1.0f;
+        Cursor.lockState = shopActive || inventory.inventoryActive || mainController.isPaused || mainController.won  ? CursorLockMode.None : CursorLockMode.Locked;
+        Time.timeScale = shopActive || inventory.inventoryActive || mainController.isPaused || mainController.won  ? 0 : cheats.isSlowMotion ? 0.5f : 1.0f;
+
     }
     private void OnTriggerStay(Collider other)
     {

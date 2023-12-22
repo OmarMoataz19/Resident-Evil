@@ -64,6 +64,12 @@ public class GrenadeThrower : MonoBehaviour
         {
            Grenade = mainController.GetCurrentGrenade().GetComponent<Rigidbody>();
         }
+        else
+        {
+            Animator.SetTrigger("Rage3");
+            Animator.ResetTrigger("Throw Grenade");
+            Animator.ResetTrigger("Hold Grenade");
+        }
         if (Application.isFocused && Input.GetKey(KeyCode.G) && mainController.GetCurrentGrenade() != null && Time.timeScale !=0f)
         {
             if(!leonAnimationController.isGrappled)
@@ -158,6 +164,7 @@ public class GrenadeThrower : MonoBehaviour
         }
 
         inventoryManager.RemoveCurrentEquippedGrenade();
+        mainController.GetCurrentGrenade().equipIndex = -1;
         StartCoroutine(ExplodeGrenade());
     }
 
@@ -167,7 +174,7 @@ public class GrenadeThrower : MonoBehaviour
 
         //Instantiate(ExplosionParticleSystem, Grenade.transform.position, Quaternion.identity);
         mainController.GetCurrentGrenade().Explode();
-        mainController.HideGrenade();
+        //mainController.HideGrenade();
         Grenade.GetComponent<Cinemachine.CinemachineImpulseSource>().GenerateImpulse(new Vector3(Random.Range(-1, 1), Random.Range(0.5f, 1), Random.Range(-1, 1)));
 
         Grenade.freezeRotation = true;

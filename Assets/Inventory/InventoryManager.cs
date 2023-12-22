@@ -176,7 +176,7 @@ public class InventoryManager : MonoBehaviour
                             {
                                 if ((selectedItem is GrenadeItem && (selectedItemIndex == equippedPanelController.mainController.GetCurrentGrenade().equipIndex)))
                                 {
-                                    equippedPanelController.mainController.HideGrenade();
+                                    equippedPanelController.mainController.HideGrenade2();
                                     equippedPanelController.RemoveGrenade();
                                 }
                             }
@@ -407,7 +407,7 @@ public class InventoryManager : MonoBehaviour
                 {
                     if(selectedItemIndex == equippedPanelController.mainController.GetCurrentGrenade().equipIndex)
                     {
-                        equippedPanelController.mainController.HideGrenade();
+                        equippedPanelController.mainController.HideGrenade2();
                         equippedPanelController.RemoveGrenade();
                     }
                 }
@@ -443,7 +443,7 @@ public class InventoryManager : MonoBehaviour
                             DisableButtons();
                             return;
                         }
-                        equippedPanelController.mainController.HideGrenade();
+                        equippedPanelController.mainController.HideGrenade2();
                         equippedPanelController.RemoveGrenade();
                     }
                 }
@@ -538,6 +538,12 @@ public class InventoryManager : MonoBehaviour
                     {
                         var ammoCountText = slot.transform.Find("AmmoCount").GetComponent<TextMeshProUGUI>();
                         ammoCountText.text = $"x{(item as AmmoItem).Amount}";
+                        ammoCountText.gameObject.SetActive(true);
+                    }
+                     if (item is WeaponItem)
+                    {
+                        var ammoCountText = slot.transform.Find("AmmoCount").GetComponent<TextMeshProUGUI>();
+                        ammoCountText.text = $"x{(item as WeaponItem).Ammo}";
                         ammoCountText.gameObject.SetActive(true);
                     }
 

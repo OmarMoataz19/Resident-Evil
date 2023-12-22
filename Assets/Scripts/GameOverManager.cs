@@ -16,9 +16,9 @@ public class GameOverManager : MonoBehaviour
         {
             GameoverWinCanvas.SetActive(true);
         }
-        else if (mainController.lost)
+        else if (mainController.lost )
         {
-            GameoverDeadCanvas.SetActive(true);
+           StartCoroutine(showGameLost());
         }
     }
     public void RestartClickHandler()
@@ -34,5 +34,12 @@ public class GameOverManager : MonoBehaviour
         GameoverDeadCanvas.SetActive(false);
         GameoverWinCanvas.SetActive(false);
         SceneManager.LoadScene(0);
+    }
+    IEnumerator showGameLost(){
+        yield return new WaitForSeconds(2); 
+        Time.timeScale = 0;
+        GameoverDeadCanvas.SetActive(true);
+
+      
     }
 }

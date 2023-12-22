@@ -29,7 +29,6 @@ public class ItemPickup : MonoBehaviour
    
     private void OnTriggerStay(Collider other)
     {
-        //var hanafy = UI.GetComponent<TMPro.TextMeshPro>();
         if (other.CompareTag("Player"))
         {
             UI.text = "Press E to Pickup " + Item.itemName;

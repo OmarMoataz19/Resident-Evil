@@ -65,12 +65,13 @@ public class ThirdPersonShootingController : MonoBehaviour
             else //todo :check if the user can have no weapon equipped..
             {
                 currentLayerIndex = 7;
-                if (leonAnimationController.isGrappled)
+                if (leonAnimationController.isGrappled || leonAnimationController.stabbing)
                 {
                     animator.SetLayerWeight(7, Mathf.Lerp(animator.GetLayerWeight(7), 0f, Time.deltaTime * 10f));
                 }
                 else
                 {
+                    
                     animator.SetLayerWeight(7, Mathf.Lerp(animator.GetLayerWeight(7), 1f, Time.deltaTime * 10f));
                 }
                // animator.SetLayerWeight(currentLayerIndex, Mathf.Lerp(animator.GetLayerWeight(currentLayerIndex), 1f, Time.deltaTime * 10f));
