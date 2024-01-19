@@ -3,7 +3,7 @@ This clone is a thrilling survival horror game that merges the eerie atmospheres
 
 ## Game Preview
 
-Explore a preview of the game through this [Google Drive](https://drive.google.com/file/d/1qU_ecjIs7Goex4HWcQZAO9ZjQzrZVJhw/view?usp=sharing).
+Explore a preview of the game through this [Google Drive](https://drive.google.com/drive/folders/1Hau-eAmGOvOy75CSsrrXIqNzwOenhYYp?usp=sharing).
 
 ## Features
 - Intense Survival Horror: Immerse yourself in a gripping atmosphere where every step could be your last.
@@ -22,7 +22,7 @@ Explore a preview of the game through this [Google Drive](https://drive.google.c
 
 ### Option 1: Play the Game
 
-1. Download the game executable from the [Google Drive](https://drive.google.com/file/d/1qU_ecjIs7Goex4HWcQZAO9ZjQzrZVJhw/view?usp=sharing).
+1. Download the game executable from the [Google Drive](https://drive.google.com/drive/folders/1Hau-eAmGOvOy75CSsrrXIqNzwOenhYYp?usp=sharing).
 2. Run the executable to open the game on your system.
 
 ### Option 2: Collaborate and Modify
